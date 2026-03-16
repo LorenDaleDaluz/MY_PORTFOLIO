@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 import {
   ArrowUpRight,
   BarChart3,
@@ -9,358 +9,326 @@ import {
   Layout,
   Mail,
   MapPin,
+  Moon,
   PenTool,
   Phone,
   Smartphone,
-} from 'lucide-react'
-import AOS from 'aos'
-import 'aos/dist/aos.css'
+  Sun,
+} from "lucide-react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const navLinks = [
-  { label: 'Home', href: '#top' },
-  { label: 'About', href: '#about' },
-  { label: 'Services', href: '#services' },
-  { label: 'Projects', href: '#projects' },
-  { label: 'Contact', href: '#contact' },
-]
+  { label: "Home", href: "#top" },
+  { label: "About", href: "#about" },
+  { label: "Services", href: "#services" },
+  { label: "Projects", href: "#projects" },
+  { label: "Contact", href: "#contact" },
+];
 
 function App() {
-  const [activeHref, setActiveHref] = useState('#top')
+  const [activeHref, setActiveHref] = useState("#top");
+  const [activeCertImage, setActiveCertImage] = useState<string | null>(null);
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const isDark = theme === "dark";
 
   useEffect(() => {
-    AOS.init({ duration: 800, once: true, easing: 'ease-out-cubic' })
-  }, [])
+    AOS.init({ duration: 800, once: true, easing: "ease-out-cubic" });
+  }, []);
+
+  useEffect(() => {
+    const savedTheme = window.localStorage.getItem("theme");
+    if (savedTheme === "light" || savedTheme === "dark") {
+      setTheme(savedTheme);
+      return;
+    }
+
+    if (window.matchMedia?.("(prefers-color-scheme: light)").matches) {
+      setTheme("light");
+    }
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    window.localStorage.setItem("theme", theme);
+  }, [theme]);
 
   const profile = {
-    name: 'Dale',
-    role: 'Web Developer',
-    location: 'Cabanatuan City, Nueva Ecija',
-    phone: '+63 9193994203',
-    email: 'lorendaledaluz@gmail.com',
+    name: "Dale",
+    role: "Web Developer",
+    location: "Cabanatuan City, Nueva Ecija",
+    phone: "+63 9193994203",
+    email: "lorendaledaluz@gmail.com",
     degree:
-      'BS in Information Technology (BSIT), Specialized in Web Systems Technology | NEUST',
-  }
+      "BS in Information Technology (BSIT), Specialized in Web Systems Technology | NEUST",
+  };
 
   const summary =
-    'I design and build modern web experiences that are fast, accessible, and easy to scale. From polished interfaces to dependable systems, I focus on clarity, collaboration, and measurable outcomes for real users.'
+    "Developing modern web experiences that are fast, accessible, and easy to scale. From polished interfaces to dependable systems, I focus on clarity, collaboration, and measurable outcomes for real users.";
 
-  const phoneLink = profile.phone.replace(/\s/g, '')
+  const phoneLink = profile.phone.replace(/\s/g, "");
   const emailLink =
-    'https://mail.google.com/mail/?view=cm&fs=1&to=lorendaledaluz@gmail.com'
-  const container = 'mx-auto w-[90vw] max-w-[1200px]'
+    "https://mail.google.com/mail/?view=cm&fs=1&to=lorendaledaluz@gmail.com";
+  const container = "mx-auto w-[90vw] max-w-[1200px]";
 
   useEffect(() => {
     const sectionIds = navLinks
-      .map((link) => link.href.replace('#', ''))
-      .filter(Boolean)
+      .map((link) => link.href.replace("#", ""))
+      .filter(Boolean);
     const sections = sectionIds
       .map((id) => document.getElementById(id))
-      .filter((section): section is HTMLElement => Boolean(section))
+      .filter((section): section is HTMLElement => Boolean(section));
 
     if (sections.length === 0) {
-      return
+      return;
     }
 
     const observer = new IntersectionObserver(
       (entries) => {
         const visibleEntries = entries
           .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
 
         if (visibleEntries.length > 0) {
-          const nextId = visibleEntries[0].target.id
+          const nextId = visibleEntries[0].target.id;
           if (nextId) {
-            setActiveHref(`#${nextId}`)
+            setActiveHref(`#${nextId}`);
           }
         }
       },
       {
-        rootMargin: '-20% 0px -60% 0px',
+        rootMargin: "-20% 0px -60% 0px",
         threshold: [0, 0.2, 0.5, 0.8],
+      },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!activeCertImage) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setActiveCertImage(null);
       }
-    )
+    };
 
-    sections.forEach((section) => observer.observe(section))
+    document.addEventListener("keydown", handleKeyDown);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
 
-    return () => observer.disconnect()
-  }, [])
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [activeCertImage]);
 
   const navItems = navLinks.map((link) => ({
     ...link,
     isActive: link.href === activeHref,
-  }))
+  }));
 
-  
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === "dark" ? "light" : "dark"));
+  };
+
+  const textPrimary = isDark ? "text-white" : "text-slate-900";
+  const textSecondary = isDark ? "text-slate-300" : "text-slate-600";
+  const textMuted = isDark ? "text-slate-400" : "text-slate-500";
+  const navActiveClass = isDark ? "text-white" : "text-slate-900";
+  const navInactiveClass = isDark
+    ? "text-slate-400 hover:text-white"
+    : "text-slate-500 hover:text-slate-900";
 
   const services = [
     {
-      title: 'Web Application',
+      title: "Web Application",
       description:
-        'End-to-end web apps with clean UI, role-based access, and scalable architecture.',
+        "End-to-end web apps with clean UI, role-based access, and scalable architecture.",
       icon: Layout,
     },
     {
-      title: 'Web Development',
+      title: "Web Development",
       description:
-        'Responsive sites and landing pages optimized for performance and SEO.',
+        "Responsive sites and landing pages optimized for performance and SEO.",
       icon: Code2,
     },
     {
-      title: 'App Development',
+      title: "App Development",
       description:
-        'Mobile-first experiences and hybrid prototypes with consistent design systems.',
+        "Mobile-first experiences and hybrid prototypes with consistent design systems.",
       icon: Smartphone,
     },
     {
-      title: 'Database Management',
+      title: "Database Management",
       description:
-        'Schema design, data integrity, and query performance for reliable systems.',
+        "Schema design, data integrity, and query performance for reliable systems.",
       icon: Database,
     },
     {
-      title: 'Data Analysis',
+      title: "Data Analysis",
       description:
-        'Dashboards and reporting that turn raw data into actionable insights.',
+        "Dashboards and reporting that turn raw data into actionable insights.",
       icon: BarChart3,
     },
     {
-      title: 'Web Design',
+      title: "Web Design",
       description:
-        'Wireframes, UI systems, and polished layouts aligned to brand goals.',
+        "Wireframes, UI systems, and polished layouts aligned to brand goals.",
       icon: PenTool,
     },
-  ]
-
-  const frontEndStack = [
-    {
-      name: 'JavaScript',
-      icon: 'https://skillicons.dev/icons?i=js',
-      badgeClass: 'bg-yellow-400',
-    },
-    {
-      name: 'TypeScript',
-      icon: 'https://skillicons.dev/icons?i=ts',
-      badgeClass: 'bg-sky-500',
-    },
-    {
-      name: 'HTML5',
-      icon: 'https://cdn-icons-png.flaticon.com/512/6528/6528608.png',
-      badgeClass: 'bg-orange-500',
-    },
-    {
-      name: 'CSS3',
-      icon: 'https://cdn-icons-png.flaticon.com/512/82/82127.png',
-      badgeClass: 'bg-blue-500',
-    },
-    {
-      name: 'Tailwind CSS',
-      icon: 'https://skillicons.dev/icons?i=tailwind',
-      badgeClass: 'bg-cyan-400',
-    },
-    {
-      name: 'React',
-      icon: 'https://skillicons.dev/icons?i=react',
-      badgeClass: 'bg-sky-400',
-    },
-    {
-      name: 'Bootstrap',
-      icon: 'https://cdn-icons-png.flaticon.com/512/5968/5968672.png',
-      badgeClass: 'bg-violet-400',
-    },
-  ]
-
-  const backEndStack = [
-    {
-      name: 'PHP',
-      icon: 'https://skillicons.dev/icons?i=php',
-      badgeClass: 'bg-slate-200',
-    },
-    {
-      name: 'Laravel',
-      icon: 'https://skillicons.dev/icons?i=laravel',
-      badgeClass: 'bg-red-500',
-    },
-    {
-      name: 'Node.js',
-      icon: 'https://skillicons.dev/icons?i=nodejs',
-      badgeClass: 'bg-emerald-500',
-    },
-    
-    {
-      name: 'MySQL',
-      icon: 'https://cdn-icons-png.flaticon.com/512/18968/18968868.png',
-      badgeClass: 'bg-blue-500',
-    },
-    
-  ]
-
-  const toolsStack = [
-    {
-      name: 'Microsoft Word',
-      icon: 'https://icons.iconarchive.com/icons/simpleicons-team/simple/128/microsoft-word-icon.png',
-      badgeClass: 'bg-sky-500',
-    },
-    {
-      name: 'Microsoft Excel',
-      icon: 'https://icons.iconarchive.com/icons/simpleicons-team/simple/128/microsoft-excel-icon.png',
-      badgeClass: 'bg-emerald-500',
-    },
-    {
-      name: 'Canva',
-      icon: 'https://icons.iconarchive.com/icons/simpleicons-team/simple/128/canva-icon.png',
-      badgeClass: 'bg-cyan-500',
-    },
-    {
-      name: 'Microsoft PowerPoint',
-      icon: 'https://icons.iconarchive.com/icons/simpleicons-team/simple/128/microsoft-powerpoint-icon.png',
-      badgeClass: 'bg-orange-500',
-    },
-    {
-      name: 'Figma',
-      icon: 'https://skillicons.dev/icons?i=figma',
-      badgeClass: 'bg-slate-800',
-    },
-    {
-      name: 'Adobe Audition',
-      icon: 'https://skillicons.dev/icons?i=audition',
-      badgeClass: 'bg-blue-600',
-    },
-  ]
+  ];
 
   const certifications = [
-    { image: '/Picture1.png' },
-    { image: '/Picture2.png' },
-    { image: '/Picture3.png' },
-    { image: '/Picture4.png' },
-    { image: '/Picture5.png' },
-    { image: '/Picture6.png' },
-    { image: '/Picture7.png' },
-    { image: '/Picture8.png' },
-    { image: '/Picture9.png' },
-  ]
-
-  const stats = [
-    { value: '12k+', label: 'Users served' },
-    { value: '2', label: 'Campuses supported' },
-    { value: '1.27', label: 'GWA (3rd Year)' },
-  ]
+    { image: "/Picture1.png" },
+    { image: "/Picture2.png" },
+    { image: "/Picture3.png" },
+    { image: "/Picture4.png" },
+    { image: "/Picture5.png" },
+    { image: "/Picture6.png" },
+    { image: "/Picture7.png" },
+    { image: "/Picture8.png" },
+    { image: "/Picture9.png" },
+  ];
 
   const projects = [
     {
-      title: 'IDentify',
+      title: "IDentify",
       subtitle:
-        'Web-based ID card issuance tracking and monitoring system with email notification',
+        "Web-based ID card issuance tracking and monitoring system with email notification",
       description:
-        'Capstone system for NEUST that streamlines administrative workflows and delivers real-time status updates.',
+        "Capstone system for NEUST that streamlines administrative workflows and delivers real-time status updates.",
       highlights: [
-        'Automated email notifications',
-        'Real-time status updates for 12,000+ users across two campuses',
+        "Automated email notifications",
+        "Real-time status updates for 12,000+ users across two campuses",
       ],
       stack: [
-        'JavaScript',
-        'React + Vite',
-        'Tailwind CSS',
-        'MySQL',
-        'Leaflet',
-        'Google Maps API',
-        'Face API',
-        'reCAPTCHA',
+        "JavaScript",
+        "React + Vite",
+        "Tailwind CSS",
+        "MySQL",
+        "Leaflet",
+        "Google Maps API",
+        "Face API",
+        "reCAPTCHA",
       ],
-      link: 'https://neust-identify.app',
-      linkLabel: 'Visit project',
+      link: "https://neust-identify.app",
+      linkLabel: "Visit project",
     },
     {
-      title: 'FinFlow',
-      subtitle: 'Mobile budgeting app',
+      title: "FinFlow",
+      subtitle: "Mobile budgeting app",
       description:
-        'A mobile budgeting application built with Ionic, Angular, SQLite, and NgxCharts.',
+        "A mobile budgeting application built with Ionic, Angular, SQLite, and NgxCharts.",
       highlights: [],
-      stack: ['Ionic', 'Angular', 'SQLite', 'NgxCharts'],
-      link: '/app-debug.apk',
-      linkLabel: 'Download app',
+      stack: ["Ionic", "Angular", "SQLite", "NgxCharts"],
+      link: "/app-debug.apk",
+      linkLabel: "Download app",
       linkDownload: true,
     },
-  ]
+  ];
 
   const education = [
     {
-      school: 'NEUST Sumacab Campus',
-      program: 'Bachelor of Science in Information Technology',
-      period: '2022 - 2026',
+      school: "NEUST Sumacab Campus",
+      program: "Bachelor of Science in Information Technology",
+      period: "2022 - 2026",
       details: [
-        'Specialized in Web Systems Technology',
+        "Specialized in Web Systems Technology",
         'Capstone: "IDentify" with automated email notifications.',
-        'GWA (3rd Year): 1.27',
+        "GWA (3rd Year): 1.27",
       ],
     },
     {
-      school: 'NEUST Laboratory High School',
-      program: 'Senior High School - ABM Strand',
-      period: '2020 - 2022',
-      details: ['Graduated with honors.'],
+      school: "NEUST Laboratory High School",
+      program: "Senior High School - ABM Strand",
+      period: "2020 - 2022",
+      details: ["Graduated with honors."],
     },
     {
-      school: 'NEUST Laboratory High School',
-      program: 'Junior High School',
-      period: '2016 - 2020',
-      details: ['Graduated with honors.'],
+      school: "NEUST Laboratory High School",
+      program: "Junior High School",
+      period: "2016 - 2020",
+      details: ["Graduated with honors."],
     },
-  ]
+  ];
 
   const socialLinks = [
     {
-      label: 'Facebook',
-      href: 'https://www.facebook.com/ldaluz19/',
+      label: "Facebook",
+      href: "https://www.facebook.com/ldaluz19/",
       icon: Facebook,
     },
     {
-      label: 'GitHub',
-      href: 'https://github.com/LorenDaleDaluz',
+      label: "GitHub",
+      href: "https://github.com/LorenDaleDaluz",
       icon: Github,
     },
     {
-      label: 'Email',
+      label: "Email",
       href: emailLink,
       icon: Mail,
     },
-  ]
+  ];
 
   const contactItems = [
     {
-      label: 'Email',
+      label: "Email",
       value: profile.email,
       href: emailLink,
       icon: Mail,
     },
     {
-      label: 'Phone',
+      label: "Phone",
       value: profile.phone,
       href: `tel:${phoneLink}`,
       icon: Phone,
     },
     {
-      label: 'Location',
+      label: "Location",
       value: profile.location,
       icon: MapPin,
     },
-  ]
-
+  ];
 
   return (
-    <div className="relative min-h-screen bg-slate-950 font-body text-slate-100">
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_15%_18%,rgba(124,58,237,0.35),transparent_45%),radial-gradient(circle_at_85%_20%,rgba(236,72,153,0.3),transparent_50%),radial-gradient(circle_at_20%_85%,rgba(34,211,238,0.2),transparent_55%)]" />
+    <div
+      className={`relative min-h-screen font-body ${
+        isDark ? "bg-slate-950 text-slate-100" : "bg-slate-50 text-slate-900"
+      }`}
+    >
+      <div
+        className={`pointer-events-none fixed inset-0 -z-10 ${
+          isDark
+            ? "bg-[radial-gradient(circle_at_15%_18%,rgba(124,58,237,0.35),transparent_45%),radial-gradient(circle_at_85%_20%,rgba(236,72,153,0.3),transparent_50%),radial-gradient(circle_at_20%_85%,rgba(34,211,238,0.2),transparent_55%)]"
+            : "bg-[radial-gradient(circle_at_15%_18%,rgba(248,113,113,0.25),transparent_45%),radial-gradient(circle_at_85%_20%,rgba(45,212,191,0.25),transparent_50%),radial-gradient(circle_at_20%_85%,rgba(59,130,246,0.18),transparent_55%)]"
+        }`}
+      />
 
-      <header className="sticky top-0 z-30 border-b border-white/10 bg-slate-950/70 backdrop-blur">
+      <header
+        className={`sticky top-0 z-30 border-b backdrop-blur ${
+          isDark
+            ? "border-white/10 bg-slate-950/70"
+            : "border-slate-200/70 bg-white/80"
+        }`}
+      >
         <div
           className={`${container} flex flex-col gap-4 py-4 md:flex-row md:items-center md:justify-between`}
         >
           <div className="flex items-center gap-3">
-            <span className="grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-red-500 to-red-900 font-display text-lg font-semibold text-white shadow-lg">
+            <span className="theme-keep-white grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-red-500 to-red-900 font-display text-lg font-semibold text-white shadow-lg">
               LD
             </span>
             <div>
-              <p className="m-0 font-semibold text-white">{profile.name}</p>
-              <p className="mt-1 text-sm text-slate-400">
+              <p className={`m-0 font-semibold tracking-widest ${textPrimary}`}>
+                {profile.name}
+              </p>
+              <p className={`mt-1 text-sm ${textMuted}`}>
                 {profile.role} | System Developer | App Developer
               </p>
             </div>
@@ -376,23 +344,45 @@ function App() {
                 href={link.href}
                 onClick={() => setActiveHref(link.href)}
                 className={`transition ${
-                  link.isActive
-                    ? 'text-white'
-                    : 'text-slate-400 hover:text-white'
+                  link.isActive ? navActiveClass : navInactiveClass
                 }`}
-                aria-current={link.isActive ? 'page' : undefined}
+                aria-current={link.isActive ? "page" : undefined}
               >
                 {link.label}
               </a>
             ))}
           </nav>
 
-          <a
-            className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:border-white/30 hover:bg-white/10"
-            href="#contact"
-          >
-            Let&#39;s talk
-          </a>
+          <div className="flex flex-wrap items-center gap-3">
+            <a
+              className={`theme-keep-white inline-flex items-center justify-center rounded-full border px-4 py-2 text-sm font-semibold transition ${
+                isDark
+                  ? "border-white/10 bg-white/5 text-white hover:border-white/30 hover:bg-white/10"
+                  : "border-slate-200 bg-slate-900 text-white hover:border-slate-300 hover:bg-slate-800"
+              }`}
+              href="#contact"
+            >
+              Let&#39;s talk
+            </a>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={
+                isDark ? "Switch to light mode" : "Switch to dark mode"
+              }
+              className={`inline-flex h-10 w-10 items-center justify-center rounded-full border transition ${
+                isDark
+                  ? "border-white/10 bg-white/5 text-white hover:border-white/30 hover:bg-white/10"
+                  : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
+              }`}
+            >
+              {isDark ? (
+                <Sun className="h-4 w-4" />
+              ) : (
+                <Moon className="h-4 w-4" />
+              )}
+            </button>
+          </div>
         </div>
       </header>
 
@@ -402,22 +392,28 @@ function App() {
             className={`${container} grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]`}
           >
             <div className="space-y-6" data-aos="fade-right">
-             
-              <h1 className="text-4xl font-semibold text-white sm:text-5xl">
-                Loren Dale <br>
-                
-                </br>Daluz
+              <h1
+                className={`text-4xl font-semibold sm:text-5xl ${textPrimary}`}
+              >
+                Loren Dale <br></br>
+                <div className="pt-5">Daluz</div>
               </h1>
-              <p className="text-base text-slate-300 sm:text-lg">{summary}</p>
+              <p className={`text-base sm:text-lg ${textSecondary}`}>
+                {summary}
+              </p>
               <div className="flex flex-wrap gap-4">
                 <a
-                  className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-red-500 to-red-900 px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:from-red-400 hover:to-red-400"
+                  className="theme-keep-white inline-flex items-center justify-center rounded-full bg-gradient-to-r from-red-500 to-red-900 px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:from-red-400 hover:to-red-400"
                   href="#contact"
                 >
                   Get in touch
                 </a>
                 <a
-                  className="inline-flex items-center gap-2 rounded-full border border-white/15 px-6 py-3 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/5"
+                  className={`inline-flex items-center gap-2 rounded-full border px-6 py-3 text-sm font-semibold transition ${
+                    isDark
+                      ? "border-white/15 text-white hover:border-white/40 hover:bg-white/5"
+                      : "border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-100"
+                  }`}
                   href="#projects"
                 >
                   View projects
@@ -426,54 +422,75 @@ function App() {
               </div>
               <div className="flex flex-wrap items-center gap-3">
                 {socialLinks.map((link) => {
-                  const Icon = link.icon
+                  const Icon = link.icon;
                   return (
                     <a
                       key={link.label}
                       href={link.href}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition hover:border-white/30 hover:bg-white/10"
+                      className={`inline-flex h-11 w-11 items-center justify-center rounded-full border transition ${
+                        isDark
+                          ? "border-white/10 bg-white/5 text-white hover:border-white/30 hover:bg-white/10"
+                          : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
+                      }`}
                       aria-label={link.label}
                     >
                       <Icon className="h-5 w-5" />
                     </a>
-                  )
+                  );
                 })}
               </div>
               <div className="grid gap-4 sm:grid-cols-3">
                 {contactItems.map((item) => {
-                  const Icon = item.icon
+                  const Icon = item.icon;
                   return (
                     <div
-                      className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-slate-200"
+                      className={`rounded-2xl border p-4 text-sm ${
+                        isDark
+                          ? "border-white/10 bg-white/5 text-slate-200"
+                          : "border-slate-200 bg-white text-slate-700"
+                      }`}
                       key={item.label}
                     >
-                      <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                      <div
+                        className={`flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] ${textMuted}`}
+                      >
                         <Icon className="h-4 w-4 text-red-300" />
                         {item.label}
                       </div>
                       {item.href ? (
                         <a
-                          className="mt-2 block text-sm font-semibold text-white"
+                          className={`mt-2 block text-sm font-semibold ${textPrimary}`}
                           href={item.href}
-                          target={item.href.startsWith("http") ? "_blank" : undefined}
-                          rel={item.href.startsWith("http") ? "noreferrer" : undefined}
+                          target={
+                            item.href.startsWith("http") ? "_blank" : undefined
+                          }
+                          rel={
+                            item.href.startsWith("http")
+                              ? "noreferrer"
+                              : undefined
+                          }
                         >
                           {item.value}
                         </a>
                       ) : (
-                        <span className="mt-2 block text-sm font-semibold text-white">
+                        <span
+                          className={`mt-2 block text-sm font-semibold ${textPrimary}`}
+                        >
                           {item.value}
                         </span>
                       )}
                     </div>
-                  )
+                  );
                 })}
               </div>
             </div>
 
-            <div className="relative flex items-center justify-center" data-aos="fade-left">
+            <div
+              className="relative flex items-center justify-center"
+              data-aos="fade-left"
+            >
               <div className="absolute h-72 w-72 rounded-full bg-gradient-to-br from-red-500/40 via-red-500/30 to-cyan-400/20 blur-3xl" />
               <div className="relative h-80 w-80 overflow-hidden rounded-full border border-white/15 bg-slate-900 shadow-[0_30px_80px_rgba(15,23,42,0.7)]">
                 <img
@@ -484,8 +501,6 @@ function App() {
                   decoding="async"
                 />
               </div>
-              
-              
             </div>
           </div>
         </section>
@@ -500,25 +515,40 @@ function App() {
                 About
               </span>
               <h2 className="mt-3 text-2xl font-semibold text-white sm:text-3xl">
-                Professional summary and focus.
+                What I build? Reliable, modern web experiences.
               </h2>
               <p className="mt-4 text-sm text-slate-300 sm:text-base">
                 {summary}
               </p>
-              <div className="mt-6 grid gap-4 sm:grid-cols-3">
-                {stats.map((stat) => (
-                  <div
-                    className="rounded-2xl border border-white/10 bg-white/5 p-4"
-                    key={stat.label}
-                  >
-                    <span className="block text-xl font-semibold text-white">
-                      {stat.value}
-                    </span>
-                    <span className="mt-1 block text-xs uppercase tracking-[0.2em] text-slate-400">
-                      {stat.label}
-                    </span>
-                  </div>
-                ))}
+              <div className="mt-6 space-y-3">
+                <div className="flex justify-center">
+                  <span className="inline-flex rounded-full border border-red-400/30 bg-red-400/10 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.28em] text-red-200">
+                    Tech Stack
+                  </span>
+                </div>
+                <div className="flex flex-col items-center gap-3">
+                  <img
+                    className="h-10 w-auto max-w-full sm:h-12"
+                    src="https://skillicons.dev/icons?i=html,css,js,ts,php,python&perline=6"
+                    alt="Tech stack icons row 1"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <img
+                    className="h-10 w-auto max-w-full sm:h-12"
+                    src="https://skillicons.dev/icons?i=java,cpp,laravel,react,angular,tailwind&perline=6"
+                    alt="Tech stack icons row 2"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <img
+                    className="h-10 w-auto max-w-full sm:h-12"
+                    src="https://skillicons.dev/icons?i=bootstrap,mysql,nodejs,git,github,au&perline=6"
+                    alt="Tech stack icons row 3"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
               </div>
             </div>
             <div
@@ -564,13 +594,13 @@ function App() {
               <span className="text-xs font-semibold uppercase tracking-[0.28em] text-red-300">
                 Services
               </span>
-              <h2 className="text-2xl font-semibold text-white sm:text-3xl">
+              <h2 className={`text-2xl font-semibold sm:text-3xl ${textPrimary}`}>
                 Reliable solutions for modern web needs.
               </h2>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {services.map((service, index) => {
-                const Icon = service.icon
+                const Icon = service.icon;
                 return (
                   <article
                     className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg transition hover:-translate-y-1 hover:border-white/25"
@@ -588,100 +618,8 @@ function App() {
                       {service.description}
                     </p>
                   </article>
-                )
+                );
               })}
-            </div>
-          </div>
-        </section>
-
-        <section className="py-20" id="skills">
-          <div className={container}>
-            <div
-              className="rounded-[32px] border border-white/10 bg-slate-900/70 p-8 shadow-lg"
-              data-aos="fade-up"
-            >
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <div className="space-y-2">
-                  <h2 className="text-2xl font-semibold text-white sm:text-3xl">
-                    My Skillset
-                  </h2>
-                  <p className="text-sm text-slate-300">
-                    Front-end, back-end, and tools I use to ship reliable
-                    products.
-                  </p>
-                </div>
-                <span className="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-cyan-200">
-                  Tech Stack
-                </span>
-              </div>
-
-              <div className="mt-8 space-y-6">
-                <div className="flex flex-wrap items-center gap-5">
-                  <span className="w-24 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                    Front-End
-                  </span>
-                  <div className="flex flex-wrap gap-3">
-                    {frontEndStack.map((item) => (
-                      <div
-                        className={`flex h-12 w-12 items-center justify-center rounded-2xl shadow-lg ${item.badgeClass}`}
-                        key={item.name}
-                      >
-                        <img
-                          className="h-6 w-6"
-                          src={item.icon}
-                          alt={item.name}
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-5">
-                  <span className="w-24 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                    Back-End
-                  </span>
-                  <div className="flex flex-wrap gap-3">
-                    {backEndStack.map((item) => (
-                      <div
-                        className={`flex h-12 w-12 items-center justify-center rounded-2xl shadow-lg ${item.badgeClass}`}
-                        key={item.name}
-                      >
-                        <img
-                          className="h-6 w-6"
-                          src={item.icon}
-                          alt={item.name}
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-5">
-                  <span className="w-24 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                    Tools
-                  </span>
-                  <div className="flex flex-wrap gap-3">
-                    {toolsStack.map((item) => (
-                      <div
-                        className={`flex h-12 w-12 items-center justify-center rounded-2xl shadow-lg ${item.badgeClass}`}
-                        key={item.name}
-                      >
-                        <img
-                          className="h-6 w-6"
-                          src={item.icon}
-                          alt={item.name}
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </section>
@@ -692,7 +630,7 @@ function App() {
               <span className="text-xs font-semibold uppercase tracking-[0.28em] text-red-300">
                 Certifications
               </span>
-              <h2 className="text-2xl font-semibold text-white sm:text-3xl">
+              <h2 className={`text-2xl font-semibold sm:text-3xl ${textPrimary}`}>
                 Credentials and completed training.
               </h2>
             </div>
@@ -700,22 +638,25 @@ function App() {
               {certifications.map((certification, index) => (
                 <article
                   className="rounded-3xl border border-white/10 bg-slate-900/70 p-4 shadow-lg transition hover:-translate-y-1 hover:border-white/25"
-                  
                   data-aos="fade-up"
                   data-aos-delay={`${index * 80}`}
+                  key={certification.image}
                 >
-                  <div className="aspect-[4/3] overflow-hidden rounded-2xl border border-white/10 bg-slate-950/60">
+                  <button
+                    type="button"
+                    className="group aspect-[4/3] w-full cursor-zoom-in overflow-hidden rounded-2xl border border-white/10 bg-slate-950/60"
+                    onClick={() => setActiveCertImage(certification.image)}
+                    aria-label={`View certification ${index + 1}`}
+                  >
                     <img
-                      className="h-full w-full object-cover"
+                      className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                       src={certification.image}
-                      
+                      alt={`Certification ${index + 1}`}
                       loading="lazy"
                       decoding="async"
                     />
-                  </div>
-                  <p className="mt-3 text-sm font-semibold text-slate-200">
-            
-                  </p>
+                  </button>
+                  <p className="mt-3 text-sm font-semibold text-slate-200"></p>
                 </article>
               ))}
             </div>
@@ -728,7 +669,7 @@ function App() {
               <span className="text-xs font-semibold uppercase tracking-[0.28em] text-red-300">
                 Projects
               </span>
-              <h2 className="text-2xl font-semibold text-white sm:text-3xl">
+              <h2 className={`text-2xl font-semibold sm:text-3xl ${textPrimary}`}>
                 Selected work built for real needs.
               </h2>
             </div>
@@ -748,7 +689,9 @@ function App() {
                       {project.subtitle}
                     </p>
                   </div>
-                  <p className="text-sm text-slate-300">{project.description}</p>
+                  <p className="text-sm text-slate-300">
+                    {project.description}
+                  </p>
                   {project.highlights.length > 0 ? (
                     <ul className="list-disc space-y-2 pl-5 text-sm text-slate-300">
                       {project.highlights.map((highlight) => (
@@ -773,20 +716,20 @@ function App() {
                       target={
                         project.linkDownload
                           ? undefined
-                          : project.link?.startsWith('http')
-                            ? '_blank'
+                          : project.link?.startsWith("http")
+                            ? "_blank"
                             : undefined
                       }
                       rel={
                         project.linkDownload
                           ? undefined
-                          : project.link?.startsWith('http')
-                            ? 'noreferrer'
+                          : project.link?.startsWith("http")
+                            ? "noreferrer"
                             : undefined
                       }
                       download={project.linkDownload ? true : undefined}
                     >
-                      {project.linkLabel ?? 'Visit project'}
+                      {project.linkLabel ?? "Visit project"}
                       <ArrowUpRight className="h-4 w-4" />
                     </a>
                   ) : null}
@@ -816,7 +759,7 @@ function App() {
               </div>
               <div className="grid gap-4">
                 {contactItems.map((item) => {
-                  const Icon = item.icon
+                  const Icon = item.icon;
                   return (
                     <div
                       className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm"
@@ -830,8 +773,14 @@ function App() {
                         <a
                           className="mt-2 block text-sm font-semibold text-white"
                           href={item.href}
-                          target={item.href.startsWith("http") ? "_blank" : undefined}
-                          rel={item.href.startsWith("http") ? "noreferrer" : undefined}
+                          target={
+                            item.href.startsWith("http") ? "_blank" : undefined
+                          }
+                          rel={
+                            item.href.startsWith("http")
+                              ? "noreferrer"
+                              : undefined
+                          }
                         >
                           {item.value}
                         </a>
@@ -841,11 +790,11 @@ function App() {
                         </span>
                       )}
                     </div>
-                  )
+                  );
                 })}
                 <div className="flex flex-wrap gap-3 pt-2">
                   {socialLinks.map((link) => {
-                    const Icon = link.icon
+                    const Icon = link.icon;
                     return (
                       <a
                         key={link.label}
@@ -857,7 +806,7 @@ function App() {
                         <Icon className="h-4 w-4" />
                         {link.label}
                       </a>
-                    )
+                    );
                   })}
                 </div>
               </div>
@@ -866,13 +815,45 @@ function App() {
         </section>
       </main>
 
-      <footer className="pb-10 pt-8 text-sm text-slate-400">
+      {activeCertImage ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Certification preview"
+          onClick={() => setActiveCertImage(null)}
+        >
+          <div
+            className="relative max-h-[85vh] w-full max-w-4xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <img
+              className="h-full w-full rounded-2xl border border-white/20 bg-slate-900 object-contain shadow-2xl"
+              src={activeCertImage}
+              alt="Certification preview"
+            />
+            <button
+              type="button"
+              className="theme-keep-white absolute right-3 top-3 rounded-full border border-white/30 bg-slate-900/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-white transition hover:bg-slate-900"
+              onClick={() => setActiveCertImage(null)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      ) : null}
+
+      <footer className={`pb-10 pt-8 text-sm ${textMuted}`}>
         <div
           className={`${container} flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center`}
         >
           <p>(c) 2026 Loren Dale Natabio Daluz. All rights reserved.</p>
           <a
-            className="text-sm font-semibold text-red-300 transition hover:text-red-200"
+            className={`text-sm font-semibold transition ${
+              isDark
+                ? "text-red-300 hover:text-red-200"
+                : "text-red-600 hover:text-red-500"
+            }`}
             href="#top"
           >
             Back to top
@@ -880,7 +861,7 @@ function App() {
         </div>
       </footer>
     </div>
-  )  
+  );
 }
 
-export default App
+export default App;
