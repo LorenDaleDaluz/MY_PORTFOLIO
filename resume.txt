@@ -1,0 +1,61 @@
+LOREN DALE NATABIO DALUZ  
+OJT APPLICANT  
+ 
+Cabanatuan City, Nueva Ecija | +63 9193994203  
+lorendaledaluz@gmail.com  
+BS in Information Technology (BSIT), Specialized in Web Systems Technology | NEUST  
+ 
+Motivated and results-driven aspiring software developer with a strong eagerness to learn coding, build practical 
+projects, and contribute to collaborative development efforts. Demonstrates problem-solving skills, ethical 
+decision-making, and the ability to manage tasks effectively while translating requirements into functional 
+solutions. Thrives in fast-paced environments and is committed to continuous technical growth, project 
+ownership, and delivering high-quality results. 
+  
+CORE COMPETENCIES  
+ 
+Software Development              Audio Editing and Production              
+Project Management             System Architecture         
+Software Documentation     Risk Assessment and Quality Assurance   
+  
+KEY ACHIEVEMENTS  
+ 
+• System Innovation. Developed our capstone titled;  IDentify: A Web -Based Identification Card Issuance 
+Tracking and Monitoring System with Email Notification in NEUST. (JavaScript, React + Vite, Tailwind CSS, 
+HTML, CSS, MySQL, Git, Leaflet, Google Maps API, Face API, reCAPTCHA, shadcn/ui ) | neust-
+identify.app | 
+FinFlow | Ionic, Angular, SQLite, NgxCharts | A Mobile Budgeting App. 
+• Documentation. Documentation that includes system architecture (Use-Case Diagram, Context to Data Flow 
+Diagram Level 2) and data structures and algorithms (Entity Relationship Diagram, Data Dictionary).  
+• Audio Editing. Produced audio productions such as 2025 PSITE Central Luzon for NEUST-CICT, Dr. Paulino 
+J. Garcia Memorial Research and Medical Center 95th founding anniversary, and more. 
+ 
+EDUCATION  
+ 
+Bachelor of Science in Information Technology, NEUST Sumacab Campus          August 2022 – June 2026 
+College of Information and Communications Technology (CICT)  
+• Specialized in Web Systems Technology  
+• Developed "IDentify", a web -based ID card issuance tracking and monitoring system for NEUST, 
+integrating automated email notifications to streamline administrative workflows, reduce processing 
+delays, and ensure real-time status updates for more than 12,000+ users for 2 different campuses.  
+•  GWA(1stYear) | 1.62  
+•  GWA(2ndYear) | 1.48  
+•  GWA(3rdYear) | 1.27 
+Senior High School Graduate, Nueva Ecija University of Science and Technology – Laboratory High 
+School (NEUST-LHS) 2020 –2022  
+Accountancy, Business, and Management (ABM) Strand.  
+• Graduated with honors. 
+ 
+Junior High School Graduate, Nueva Ecija University of Science and Technology – Laboratory High 
+School (NEUST-LHS) 2016 –2020 
+•  Graduated with honors.
+ADDITIONAL INFORMATION  
+ 
+• Languages: English, Filipino  
+• Certifications: 4th International Training Summit and Research Conference on Information Technology   
+ 2025,  
+ Certiport International Exam Certification on HTML – CSS Passer,  
+ Regional Assembly on Information Technology Education (RAITE) 2025,   
+• Awards/Activities: Participated in  International Research Conference on Information Technology 
+Education 2023, 2024, 2025  | IRCITE 2023 Bataan (PSITE Central Luzon) Dance Champion, IRCITE 
+2024 Wesleyan University – Philippines (PSITE Central Luzon) Dance Champion, 2025 PSITE 3rd Runner 
+– up.
