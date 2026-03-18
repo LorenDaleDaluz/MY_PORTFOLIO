@@ -8,14 +8,12 @@ import {
   Github,
   Layout,
   Mail,
-  Menu,
   MapPin,
   Moon,
   PenTool,
   Phone,
   Smartphone,
   Sun,
-  X,
 } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -534,13 +532,32 @@ function App() {
                 aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
                 aria-controls="mobile-navigation"
                 aria-expanded={isMobileMenuOpen}
-                className={`md:hidden ${headerIconButtonClass}`}
+                className={`relative md:hidden ${headerIconButtonClass}`}
               >
-                {isMobileMenuOpen ? (
-                  <X className="h-5 w-5" />
-                ) : (
-                  <Menu className="h-5 w-5" />
-                )}
+                <span className="sr-only">
+                  {isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+                </span>
+                <span className="relative block h-4 w-5">
+                  <span
+                    className={`absolute left-0 top-0 h-0.5 w-5 rounded-full transition-all duration-300 ease-out ${
+                      isMobileMenuOpen
+                        ? "translate-y-[7px] rotate-45"
+                        : "translate-y-0 rotate-0"
+                    } ${isDark ? "bg-white" : "bg-slate-700"}`}
+                  />
+                  <span
+                    className={`absolute left-0 top-[7px] h-0.5 w-5 rounded-full transition-all duration-200 ease-out ${
+                      isMobileMenuOpen ? "opacity-0" : "opacity-100"
+                    } ${isDark ? "bg-white" : "bg-slate-700"}`}
+                  />
+                  <span
+                    className={`absolute left-0 top-[14px] h-0.5 w-5 rounded-full transition-all duration-300 ease-out ${
+                      isMobileMenuOpen
+                        ? "-translate-y-[7px] -rotate-45"
+                        : "translate-y-0 rotate-0"
+                    } ${isDark ? "bg-white" : "bg-slate-700"}`}
+                  />
+                </span>
               </button>
             </div>
           </div>
@@ -548,29 +565,48 @@ function App() {
           <div
             id="mobile-navigation"
             aria-hidden={!isMobileMenuOpen}
-            className={`overflow-hidden transition-all duration-300 md:hidden ${
+            className={`grid transition-[grid-template-rows,opacity,transform,margin] duration-300 ease-out md:hidden ${
               isMobileMenuOpen
-                ? "visible mt-4 max-h-[28rem] opacity-100"
-                : "invisible max-h-0 opacity-0"
+                ? "visible mt-4 grid-rows-[1fr] opacity-100 translate-y-0"
+                : "invisible mt-0 grid-rows-[0fr] opacity-0 -translate-y-2"
             }`}
           >
-            <div className={`rounded-3xl border p-4 ${panelSurfaceStrong}`}>
+            <div className="min-h-0 overflow-hidden">
+              <div className={`rounded-3xl border p-4 ${panelSurfaceStrong}`}>
               <nav className="flex flex-col gap-3" aria-label="Mobile primary">
-                {navItems.map((link) => (
+                {navItems.map((link, index) => (
                   <a
                     key={link.href}
                     href={link.href}
                     onClick={() => handleNavItemClick(link.href)}
-                    className={`rounded-2xl border px-4 py-3 text-sm font-medium transition ${
+                    className={`rounded-2xl border px-4 py-3 text-sm font-medium transition-all duration-300 ease-out ${
+                      isMobileMenuOpen
+                        ? "translate-y-0 opacity-100"
+                        : "translate-y-2 opacity-0"
+                    } ${
                       link.isActive ? navMobileActiveClass : navMobileInactiveClass
                     }`}
+                    style={{
+                      transitionDelay: isMobileMenuOpen ? `${80 + index * 45}ms` : "0ms",
+                    }}
                     aria-current={link.isActive ? "page" : undefined}
                   >
                     {link.label}
                   </a>
                 ))}
               </nav>
-              <div className="mt-4 flex items-center gap-3">
+              <div
+                className={`mt-4 flex items-center gap-3 transition-all duration-300 ease-out ${
+                  isMobileMenuOpen
+                    ? "translate-y-0 opacity-100"
+                    : "translate-y-2 opacity-0"
+                }`}
+                style={{
+                  transitionDelay: isMobileMenuOpen
+                    ? `${80 + navItems.length * 45}ms`
+                    : "0ms",
+                }}
+              >
                 <a className={`min-w-0 flex-1 ${headerActionClass}`} href="#contact" onClick={() => handleNavItemClick("#contact")}>
                   Let&#39;s talk
                 </a>
@@ -590,6 +626,7 @@ function App() {
                 </button>
               </div>
             </div>
+            </div>
           </div>
         </div>
       </header>
@@ -600,7 +637,7 @@ function App() {
           <div
             className={`${container} grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]`}
           >
-            <div className="space-y-6" data-aos="fade-right">
+            <div className="order-2 space-y-6 lg:order-1" data-aos="fade-right">
               <h1
                 className={`text-4xl font-semibold sm:text-5xl ${textPrimary}`}
               >
@@ -697,7 +734,7 @@ function App() {
             </div>
 
             <div
-              className="relative flex items-center justify-center"
+              className="order-1 relative flex items-center justify-center lg:order-2"
               data-aos="fade-left"
             >
               <div className="absolute h-72 w-72 rounded-full bg-gradient-to-br from-red-500/40 via-red-500/30 to-cyan-400/20 blur-3xl" />
