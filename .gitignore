@@ -24,7 +24,7 @@ dist-ssr
 *.sw?
 
 # Images
-*.png
+
 *.jpg
 *.jpeg
 *.gif

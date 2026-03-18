@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import StarsBackground from "./components/StarsBackground";
 
 const navLinks = [
   { label: "Home", href: "#top" },
@@ -29,7 +30,21 @@ const navLinks = [
 function App() {
   const [activeHref, setActiveHref] = useState("#top");
   const [activeCertImage, setActiveCertImage] = useState<string | null>(null);
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    if (typeof window === "undefined") {
+      return "dark";
+    }
+
+    const savedTheme = window.localStorage.getItem("theme");
+
+    if (savedTheme === "light" || savedTheme === "dark") {
+      return savedTheme;
+    }
+
+    return window.matchMedia?.("(prefers-color-scheme: light)").matches
+      ? "light"
+      : "dark";
+  });
   const isDark = theme === "dark";
 
   useEffect(() => {
@@ -37,19 +52,8 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const savedTheme = window.localStorage.getItem("theme");
-    if (savedTheme === "light" || savedTheme === "dark") {
-      setTheme(savedTheme);
-      return;
-    }
-
-    if (window.matchMedia?.("(prefers-color-scheme: light)").matches) {
-      setTheme("light");
-    }
-  }, []);
-
-  useEffect(() => {
     document.documentElement.dataset.theme = theme;
+    document.documentElement.classList.toggle("dark", theme === "dark");
     window.localStorage.setItem("theme", theme);
   }, [theme]);
 
@@ -144,6 +148,47 @@ function App() {
   const navInactiveClass = isDark
     ? "text-slate-400 hover:text-white"
     : "text-slate-500 hover:text-slate-900";
+  const accentText = isDark ? "text-red-300" : "text-red-600";
+  const accentLink = isDark
+    ? "text-red-300 hover:text-red-200"
+    : "text-red-600 hover:text-red-500";
+  const panelSurface = isDark
+    ? "border-white/10 bg-slate-900/70 shadow-lg"
+    : "border-slate-200/80 bg-white/85 shadow-[0_20px_55px_rgba(148,163,184,0.16)]";
+  const panelSurfaceStrong = isDark
+    ? "border-white/10 bg-slate-900/80 shadow-lg"
+    : "border-slate-200/80 bg-white/90 shadow-[0_24px_60px_rgba(148,163,184,0.18)]";
+  const panelSurfaceInteractive = isDark
+    ? "border-white/10 bg-slate-900/70 shadow-lg hover:-translate-y-1 hover:border-white/25"
+    : "border-slate-200/80 bg-white/85 shadow-[0_20px_55px_rgba(148,163,184,0.16)] hover:-translate-y-1 hover:border-slate-300";
+  const nestedSurface = isDark
+    ? "border-white/10 bg-slate-950/50"
+    : "border-slate-200/70 bg-slate-50/95";
+  const mediaSurface = isDark
+    ? "border-white/10 bg-slate-950/60"
+    : "border-slate-200/70 bg-slate-100/90";
+  const iconSurface = isDark
+    ? "bg-white/10 text-red-200"
+    : "bg-red-50 text-red-600";
+  const chipSurface = isDark
+    ? "border-white/10 bg-white/5 text-slate-200"
+    : "border-slate-200/80 bg-slate-100 text-slate-700";
+  const insetSurface = isDark
+    ? "border-white/10 bg-white/5"
+    : "border-slate-200/80 bg-slate-50/95";
+  const portraitSurface = isDark
+    ? "border-white/15 bg-slate-900 shadow-[0_30px_80px_rgba(15,23,42,0.7)]"
+    : "border-white/80 bg-white shadow-[0_30px_80px_rgba(148,163,184,0.28)]";
+  const techBadgeSurface = isDark
+    ? "border-red-400/30 bg-red-400/10 text-red-200"
+    : "border-red-200 bg-red-50 text-red-700";
+  const sectionBandFeature = isDark
+    ? "bg-[radial-gradient(circle_at_18%_18%,rgba(30,41,59,0.82),transparent_28%),radial-gradient(circle_at_82%_78%,rgba(37,99,235,0.12),transparent_30%),linear-gradient(135deg,rgba(15,23,42,0.88),rgba(2,6,23,0.97))]"
+    : "bg-[radial-gradient(circle_at_18%_18%,rgba(191,219,254,0.55),transparent_24%),radial-gradient(circle_at_82%_78%,rgba(254,215,170,0.4),transparent_32%),linear-gradient(135deg,rgba(255,255,255,0.94),rgba(241,245,249,0.98))]";
+  const sectionBandPlain = isDark
+    ? "bg-[linear-gradient(180deg,rgba(3,7,18,0.985),rgba(15,23,42,0.99))]"
+    : "bg-[linear-gradient(180deg,rgba(255,255,255,0.985),rgba(248,250,252,0.99))]";
+  const sectionDivider = isDark ? "bg-white/8" : "bg-slate-200/80";
 
   const services = [
     {
@@ -298,95 +343,103 @@ function App() {
 
   return (
     <div
-      className={`relative min-h-screen font-body ${
+      className={`relative min-h-screen overflow-x-hidden font-body ${
         isDark ? "bg-slate-950 text-slate-100" : "bg-slate-50 text-slate-900"
       }`}
     >
-      <div
-        className={`pointer-events-none fixed inset-0 -z-10 ${
-          isDark
-            ? "bg-[radial-gradient(circle_at_15%_18%,rgba(124,58,237,0.35),transparent_45%),radial-gradient(circle_at_85%_20%,rgba(236,72,153,0.3),transparent_50%),radial-gradient(circle_at_20%_85%,rgba(34,211,238,0.2),transparent_55%)]"
-            : "bg-[radial-gradient(circle_at_15%_18%,rgba(248,113,113,0.25),transparent_45%),radial-gradient(circle_at_85%_20%,rgba(45,212,191,0.25),transparent_50%),radial-gradient(circle_at_20%_85%,rgba(59,130,246,0.18),transparent_55%)]"
-        }`}
-      />
-
-      <header
-        className={`sticky top-0 z-30 border-b backdrop-blur ${
-          isDark
-            ? "border-white/10 bg-slate-950/70"
-            : "border-slate-200/70 bg-white/80"
-        }`}
-      >
+      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
         <div
-          className={`${container} flex flex-col gap-4 py-4 md:flex-row md:items-center md:justify-between`}
+          className={`absolute inset-0 ${
+            isDark
+              ? "bg-[radial-gradient(circle_at_20%_16%,rgba(255,255,255,0.07),transparent_26%),radial-gradient(circle_at_78%_18%,rgba(148,163,184,0.12),transparent_30%),linear-gradient(180deg,rgba(2,6,23,0.98),rgba(2,8,23,0.95))]"
+              : "bg-[radial-gradient(circle_at_15%_18%,rgba(248,113,113,0.18),transparent_45%),radial-gradient(circle_at_85%_20%,rgba(45,212,191,0.18),transparent_50%),radial-gradient(circle_at_20%_85%,rgba(59,130,246,0.14),transparent_55%)]"
+          }`}
+        />
+        {isDark ? (
+          <div className="absolute inset-0 opacity-95" aria-hidden="true">
+            <StarsBackground />
+          </div>
+        ) : null}
+      </div>
+
+      <div className="relative z-10">
+        <header
+          className={`sticky top-0 z-[100] border-b backdrop-blur ${
+            isDark
+              ? "border-white/10 bg-slate-950/70"
+              : "border-slate-200/70 bg-white/80"
+          }`}
         >
-          <div className="flex items-center gap-3">
-            <span className="theme-keep-white grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-red-500 to-red-900 font-display text-lg font-semibold text-white shadow-lg">
-              LD
-            </span>
-            <div>
-              <p className={`m-0 font-semibold tracking-widest ${textPrimary}`}>
-                {profile.name}
-              </p>
-              <p className={`mt-1 text-sm ${textMuted}`}>
-                {profile.role} | System Developer | App Developer
-              </p>
+          <div
+            className={`${container} flex flex-col gap-4 py-4 md:flex-row md:items-center md:justify-between`}
+          >
+            <div className="flex items-center gap-3">
+              <span className="theme-keep-white grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-red-500 to-red-900 font-display text-lg font-semibold text-white shadow-lg">
+                LD
+              </span>
+              <div>
+                <p className={`m-0 font-semibold tracking-widest ${textPrimary}`}>
+                  {profile.name}
+                </p>
+                <p className={`mt-1 text-sm ${textMuted}`}>
+                  {profile.role} | System Developer | App Developer
+                </p>
+              </div>
+            </div>
+
+            <nav
+              className="flex flex-wrap gap-4 text-sm font-medium text-slate-400"
+              aria-label="Primary"
+            >
+              {navItems.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setActiveHref(link.href)}
+                  className={`transition ${
+                    link.isActive ? navActiveClass : navInactiveClass
+                  }`}
+                  aria-current={link.isActive ? "page" : undefined}
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <a
+                className={`theme-keep-white inline-flex items-center justify-center rounded-full border px-4 py-2 text-sm font-semibold transition ${
+                  isDark
+                    ? "border-white/10 bg-white/5 text-white hover:border-white/30 hover:bg-white/10"
+                    : "border-slate-200 bg-slate-900 text-white hover:border-slate-300 hover:bg-slate-800"
+                }`}
+                href="#contact"
+              >
+                Let&#39;s talk
+              </a>
+              <button
+                type="button"
+                onClick={toggleTheme}
+                aria-label={
+                  isDark ? "Switch to light mode" : "Switch to dark mode"
+                }
+                className={`inline-flex h-10 w-10 items-center justify-center rounded-full border transition ${
+                  isDark
+                    ? "border-white/10 bg-white/5 text-white hover:border-white/30 hover:bg-white/10"
+                    : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
+                }`}
+              >
+                {isDark ? (
+                  <Sun className="h-4 w-4" />
+                ) : (
+                  <Moon className="h-4 w-4" />
+                )}
+              </button>
             </div>
           </div>
+        </header>
 
-          <nav
-            className="flex flex-wrap gap-4 text-sm font-medium text-slate-400"
-            aria-label="Primary"
-          >
-            {navItems.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={() => setActiveHref(link.href)}
-                className={`transition ${
-                  link.isActive ? navActiveClass : navInactiveClass
-                }`}
-                aria-current={link.isActive ? "page" : undefined}
-              >
-                {link.label}
-              </a>
-            ))}
-          </nav>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <a
-              className={`theme-keep-white inline-flex items-center justify-center rounded-full border px-4 py-2 text-sm font-semibold transition ${
-                isDark
-                  ? "border-white/10 bg-white/5 text-white hover:border-white/30 hover:bg-white/10"
-                  : "border-slate-200 bg-slate-900 text-white hover:border-slate-300 hover:bg-slate-800"
-              }`}
-              href="#contact"
-            >
-              Let&#39;s talk
-            </a>
-            <button
-              type="button"
-              onClick={toggleTheme}
-              aria-label={
-                isDark ? "Switch to light mode" : "Switch to dark mode"
-              }
-              className={`inline-flex h-10 w-10 items-center justify-center rounded-full border transition ${
-                isDark
-                  ? "border-white/10 bg-white/5 text-white hover:border-white/30 hover:bg-white/10"
-                  : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
-              }`}
-            >
-              {isDark ? (
-                <Sun className="h-4 w-4" />
-              ) : (
-                <Moon className="h-4 w-4" />
-              )}
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <main>
+        <main className="relative z-0">
         <section className="pb-20 pt-16" id="top">
           <div
             className={`${container} grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]`}
@@ -456,7 +509,7 @@ function App() {
                       <div
                         className={`flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] ${textMuted}`}
                       >
-                        <Icon className="h-4 w-4 text-red-300" />
+                        <Icon className={`h-4 w-4 ${accentText}`} />
                         {item.label}
                       </div>
                       {item.href ? (
@@ -492,7 +545,9 @@ function App() {
               data-aos="fade-left"
             >
               <div className="absolute h-72 w-72 rounded-full bg-gradient-to-br from-red-500/40 via-red-500/30 to-cyan-400/20 blur-3xl" />
-              <div className="relative h-80 w-80 overflow-hidden rounded-full border border-white/15 bg-slate-900 shadow-[0_30px_80px_rgba(15,23,42,0.7)]">
+              <div
+                className={`relative h-80 w-80 overflow-hidden rounded-full border ${portraitSurface}`}
+              >
                 <img
                   className="h-full w-full object-cover"
                   src="/myImage.png"
@@ -505,24 +560,38 @@ function App() {
           </div>
         </section>
 
-        <section className="py-20" id="about">
-          <div className={`${container} grid gap-8 lg:grid-cols-[1.2fr_0.8fr]`}>
+        <section className="relative isolate z-0 overflow-hidden py-24" id="about">
+          <div
+            className={`pointer-events-none absolute inset-0 -z-10 ${sectionBandPlain}`}
+            aria-hidden="true"
+          />
+          <div
+            className={`pointer-events-none absolute inset-x-0 top-0 h-px -z-10 ${sectionDivider}`}
+            aria-hidden="true"
+          />
+          <div className={`${container} relative grid gap-8 lg:grid-cols-[1.2fr_0.8fr]`}>
             <div
-              className="rounded-3xl border border-white/10 bg-slate-900/70 p-8 shadow-lg"
+              className={`rounded-3xl border p-8 ${panelSurface}`}
               data-aos="fade-up"
             >
-              <span className="text-xs font-semibold uppercase tracking-[0.28em] text-red-300">
+              <span
+                className={`text-xs font-semibold uppercase tracking-[0.28em] ${accentText}`}
+              >
                 About
               </span>
-              <h2 className="mt-3 text-2xl font-semibold text-white sm:text-3xl">
+              <h2
+                className={`mt-3 text-2xl font-semibold sm:text-3xl ${textPrimary}`}
+              >
                 What I build? Reliable, modern web experiences.
               </h2>
-              <p className="mt-4 text-sm text-slate-300 sm:text-base">
+              <p className={`mt-4 text-sm sm:text-base ${textSecondary}`}>
                 {summary}
               </p>
               <div className="mt-6 space-y-3">
                 <div className="flex justify-center">
-                  <span className="inline-flex rounded-full border border-red-400/30 bg-red-400/10 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.28em] text-red-200">
+                  <span
+                    className={`inline-flex rounded-full border px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.28em] ${techBadgeSurface}`}
+                  >
                     Tech Stack
                   </span>
                 </div>
@@ -552,31 +621,35 @@ function App() {
               </div>
             </div>
             <div
-              className="rounded-3xl border border-white/10 bg-slate-900/70 p-8 shadow-lg"
+              className={`rounded-3xl border p-8 ${panelSurface}`}
               data-aos="fade-up"
               data-aos-delay="100"
             >
-              <span className="text-xs font-semibold uppercase tracking-[0.28em] text-red-300">
+              <span
+                className={`text-xs font-semibold uppercase tracking-[0.28em] ${accentText}`}
+              >
                 Education
               </span>
               <div className="mt-5 space-y-4">
                 {education.map((item) => (
                   <div
-                    className="rounded-2xl border border-white/10 bg-slate-950/50 p-4"
+                    className={`rounded-2xl border p-4 ${nestedSurface}`}
                     key={`${item.school}-${item.period}`}
                   >
                     <div className="flex flex-wrap items-start justify-between gap-2">
                       <div>
-                        <h3 className="text-sm font-semibold text-white">
+                        <h3 className={`text-sm font-semibold ${textPrimary}`}>
                           {item.school}
                         </h3>
-                        <p className="text-xs text-slate-400">{item.program}</p>
+                        <p className={`text-xs ${textMuted}`}>{item.program}</p>
                       </div>
-                      <span className="text-xs font-semibold text-red-300">
+                      <span className={`text-xs font-semibold ${accentText}`}>
                         {item.period}
                       </span>
                     </div>
-                    <ul className="mt-3 list-disc space-y-1 pl-5 text-xs text-slate-300">
+                    <ul
+                      className={`mt-3 list-disc space-y-1 pl-5 text-xs ${textSecondary}`}
+                    >
                       {item.details.map((detail) => (
                         <li key={detail}>{detail}</li>
                       ))}
@@ -588,10 +661,12 @@ function App() {
           </div>
         </section>
 
-        <section className="py-20" id="services">
+        <section className="py-24" id="services">
           <div className={container}>
             <div className="mb-8 space-y-3" data-aos="fade-up">
-              <span className="text-xs font-semibold uppercase tracking-[0.28em] text-red-300">
+              <span
+                className={`text-xs font-semibold uppercase tracking-[0.28em] ${accentText}`}
+              >
                 Services
               </span>
               <h2 className={`text-2xl font-semibold sm:text-3xl ${textPrimary}`}>
@@ -603,18 +678,20 @@ function App() {
                 const Icon = service.icon;
                 return (
                   <article
-                    className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg transition hover:-translate-y-1 hover:border-white/25"
+                    className={`rounded-3xl border p-6 transition ${panelSurfaceInteractive}`}
                     key={service.title}
                     data-aos="fade-up"
                     data-aos-delay={`${index * 80}`}
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-red-200">
+                    <div
+                      className={`flex h-12 w-12 items-center justify-center rounded-2xl ${iconSurface}`}
+                    >
                       <Icon className="h-6 w-6" />
                     </div>
-                    <h3 className="mt-4 text-lg font-semibold text-white">
+                    <h3 className={`mt-4 text-lg font-semibold ${textPrimary}`}>
                       {service.title}
                     </h3>
-                    <p className="mt-3 text-sm text-slate-300">
+                    <p className={`mt-3 text-sm ${textSecondary}`}>
                       {service.description}
                     </p>
                   </article>
@@ -624,10 +701,23 @@ function App() {
           </div>
         </section>
 
-        <section className="py-20" id="certifications">
-          <div className={container}>
+        <section
+          className="relative isolate z-0 overflow-hidden py-24"
+          id="certifications"
+        >
+          <div
+            className={`pointer-events-none absolute inset-0 -z-10 ${sectionBandPlain}`}
+            aria-hidden="true"
+          />
+          <div
+            className={`pointer-events-none absolute inset-x-0 top-0 h-px -z-10 ${sectionDivider}`}
+            aria-hidden="true"
+          />
+          <div className={`${container} relative`}>
             <div className="mb-8 space-y-3" data-aos="fade-up">
-              <span className="text-xs font-semibold uppercase tracking-[0.28em] text-red-300">
+              <span
+                className={`text-xs font-semibold uppercase tracking-[0.28em] ${accentText}`}
+              >
                 Certifications
               </span>
               <h2 className={`text-2xl font-semibold sm:text-3xl ${textPrimary}`}>
@@ -637,14 +727,14 @@ function App() {
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {certifications.map((certification, index) => (
                 <article
-                  className="rounded-3xl border border-white/10 bg-slate-900/70 p-4 shadow-lg transition hover:-translate-y-1 hover:border-white/25"
+                  className={`rounded-3xl border p-4 shadow-lg transition ${panelSurfaceInteractive}`}
                   data-aos="fade-up"
                   data-aos-delay={`${index * 80}`}
                   key={certification.image}
                 >
                   <button
                     type="button"
-                    className="group aspect-[4/3] w-full cursor-zoom-in overflow-hidden rounded-2xl border border-white/10 bg-slate-950/60"
+                    className={`group aspect-[4/3] w-full cursor-zoom-in overflow-hidden rounded-2xl border ${mediaSurface}`}
                     onClick={() => setActiveCertImage(certification.image)}
                     aria-label={`View certification ${index + 1}`}
                   >
@@ -663,10 +753,23 @@ function App() {
           </div>
         </section>
 
-        <section className="py-20" id="projects">
-          <div className={container}>
-            <div className="mb-8 space-y-3" data-aos="fade-up">
-              <span className="text-xs font-semibold uppercase tracking-[0.28em] text-red-300">
+        <section
+          className="relative isolate z-0 overflow-hidden pb-24 pt-24"
+          id="projects"
+        >
+          <div
+            className={`pointer-events-none absolute inset-0 -z-10 ${sectionBandFeature}`}
+            aria-hidden="true"
+          />
+          <div
+            className={`pointer-events-none absolute inset-x-0 top-0 h-px -z-10 ${sectionDivider}`}
+            aria-hidden="true"
+          />
+          <div className={`${container} relative`}>
+            <div className="mb-12 space-y-3 text-center" data-aos="fade-up">
+              <span
+                className={`text-xs font-semibold uppercase tracking-[0.28em] ${accentText}`}
+              >
                 Projects
               </span>
               <h2 className={`text-2xl font-semibold sm:text-3xl ${textPrimary}`}>
@@ -676,24 +779,24 @@ function App() {
             <div className="grid gap-6 md:grid-cols-2">
               {projects.map((project, index) => (
                 <article
-                  className="flex h-full flex-col gap-4 rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg"
+                  className={`flex h-full flex-col gap-4 rounded-3xl border p-6 ${panelSurface}`}
                   key={project.title}
                   data-aos="fade-up"
                   data-aos-delay={`${index * 100}`}
                 >
                   <div>
-                    <h3 className="text-lg font-semibold text-white">
+                    <h3 className={`text-lg font-semibold ${textPrimary}`}>
                       {project.title}
                     </h3>
-                    <p className="mt-1 text-sm text-slate-400">
+                    <p className={`mt-1 text-sm ${textMuted}`}>
                       {project.subtitle}
                     </p>
                   </div>
-                  <p className="text-sm text-slate-300">
+                  <p className={`text-sm ${textSecondary}`}>
                     {project.description}
                   </p>
                   {project.highlights.length > 0 ? (
-                    <ul className="list-disc space-y-2 pl-5 text-sm text-slate-300">
+                    <ul className={`list-disc space-y-2 pl-5 text-sm ${textSecondary}`}>
                       {project.highlights.map((highlight) => (
                         <li key={highlight}>{highlight}</li>
                       ))}
@@ -702,7 +805,7 @@ function App() {
                   <div className="flex flex-wrap gap-2">
                     {project.stack.map((tag) => (
                       <span
-                        className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-slate-200"
+                        className={`rounded-full border px-3 py-1 text-xs font-semibold ${chipSurface}`}
                         key={tag}
                       >
                         {tag}
@@ -711,7 +814,7 @@ function App() {
                   </div>
                   {project.link ? (
                     <a
-                      className="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-red-300 transition hover:text-red-200"
+                      className={`mt-auto inline-flex items-center gap-2 text-sm font-semibold transition ${accentLink}`}
                       href={project.link}
                       target={
                         project.linkDownload
@@ -739,20 +842,30 @@ function App() {
           </div>
         </section>
 
-        <section className="py-20" id="contact">
-          <div className={container}>
+        <section className="relative isolate z-0 overflow-hidden pb-24 pt-24" id="contact">
+          <div
+            className={`pointer-events-none absolute inset-0 -z-10 ${sectionBandPlain}`}
+            aria-hidden="true"
+          />
+          <div
+            className={`pointer-events-none absolute inset-x-0 top-0 h-px -z-10 ${sectionDivider}`}
+            aria-hidden="true"
+          />
+          <div className={`${container} relative`}>
             <div
-              className="grid gap-6 rounded-[28px] border border-white/10 bg-slate-900/80 p-8 shadow-lg md:grid-cols-[1.1fr_0.9fr]"
+              className={`grid gap-6 rounded-[28px] border p-8 md:grid-cols-[1.1fr_0.9fr] ${panelSurfaceStrong}`}
               data-aos="fade-up"
             >
               <div className="space-y-4">
-                <span className="text-xs font-semibold uppercase tracking-[0.28em] text-red-300">
+                <span
+                  className={`text-xs font-semibold uppercase tracking-[0.28em] ${accentText}`}
+                >
                   Contact
                 </span>
-                <h2 className="text-2xl font-semibold text-white sm:text-3xl">
+                <h2 className={`text-2xl font-semibold sm:text-3xl ${textPrimary}`}>
                   Let&#39;s build something reliable together.
                 </h2>
-                <p className="text-sm text-slate-300">
+                <p className={`text-sm ${textSecondary}`}>
                   Open to web development roles, freelance work, and
                   collaborative projects focused on modern web experiences.
                 </p>
@@ -762,16 +875,18 @@ function App() {
                   const Icon = item.icon;
                   return (
                     <div
-                      className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm"
+                      className={`rounded-2xl border p-4 text-sm ${insetSurface}`}
                       key={item.label}
                     >
-                      <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                        <Icon className="h-4 w-4 text-red-300" />
+                      <div
+                        className={`flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] ${textMuted}`}
+                      >
+                        <Icon className={`h-4 w-4 ${accentText}`} />
                         {item.label}
                       </div>
                       {item.href ? (
                         <a
-                          className="mt-2 block text-sm font-semibold text-white"
+                          className={`mt-2 block text-sm font-semibold ${textPrimary}`}
                           href={item.href}
                           target={
                             item.href.startsWith("http") ? "_blank" : undefined
@@ -785,7 +900,9 @@ function App() {
                           {item.value}
                         </a>
                       ) : (
-                        <span className="mt-2 block text-sm font-semibold text-white">
+                        <span
+                          className={`mt-2 block text-sm font-semibold ${textPrimary}`}
+                        >
                           {item.value}
                         </span>
                       )}
@@ -801,7 +918,7 @@ function App() {
                         href={link.href}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white transition hover:border-white/30 hover:bg-white/10"
+                        className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] transition ${isDark ? "border-white/10 bg-white/5 text-white hover:border-white/30 hover:bg-white/10" : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-100"}`}
                       >
                         <Icon className="h-4 w-4" />
                         {link.label}
@@ -813,53 +930,50 @@ function App() {
             </div>
           </div>
         </section>
-      </main>
+        </main>
 
-      {activeCertImage ? (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Certification preview"
-          onClick={() => setActiveCertImage(null)}
-        >
+        {activeCertImage ? (
           <div
-            className="relative max-h-[85vh] w-full max-w-4xl"
-            onClick={(event) => event.stopPropagation()}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Certification preview"
+            onClick={() => setActiveCertImage(null)}
           >
-            <img
-              className="h-full w-full rounded-2xl border border-white/20 bg-slate-900 object-contain shadow-2xl"
-              src={activeCertImage}
-              alt="Certification preview"
-            />
-            <button
-              type="button"
-              className="theme-keep-white absolute right-3 top-3 rounded-full border border-white/30 bg-slate-900/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-white transition hover:bg-slate-900"
-              onClick={() => setActiveCertImage(null)}
+            <div
+              className="relative max-h-[85vh] w-full max-w-4xl"
+              onClick={(event) => event.stopPropagation()}
             >
-              Close
-            </button>
+              <img
+                className="h-full w-full rounded-2xl border border-white/20 bg-slate-900 object-contain shadow-2xl"
+                src={activeCertImage}
+                alt="Certification preview"
+              />
+              <button
+                type="button"
+                className="theme-keep-white absolute right-3 top-3 rounded-full border border-white/30 bg-slate-900/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-white transition hover:bg-slate-900"
+                onClick={() => setActiveCertImage(null)}
+              >
+                Close
+              </button>
+            </div>
           </div>
-        </div>
-      ) : null}
+        ) : null}
 
-      <footer className={`pb-10 pt-8 text-sm ${textMuted}`}>
-        <div
-          className={`${container} flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center`}
-        >
-          <p>(c) 2026 Loren Dale Natabio Daluz. All rights reserved.</p>
-          <a
-            className={`text-sm font-semibold transition ${
-              isDark
-                ? "text-red-300 hover:text-red-200"
-                : "text-red-600 hover:text-red-500"
-            }`}
-            href="#top"
+        <footer className={`pb-10 pt-8 text-sm ${textMuted}`}>
+          <div
+            className={`${container} flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center`}
           >
-            Back to top
-          </a>
-        </div>
-      </footer>
+            <p>(c) 2026 Loren Dale Natabio Daluz. All rights reserved.</p>
+            <a
+              className={`text-sm font-semibold transition ${accentLink}`}
+              href="#top"
+            >
+              Back to top
+            </a>
+          </div>
+        </footer>
+      </div>
     </div>
   );
 }
