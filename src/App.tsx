@@ -8,12 +8,14 @@ import {
   Github,
   Layout,
   Mail,
+  Menu,
   MapPin,
   Moon,
   PenTool,
   Phone,
   Smartphone,
   Sun,
+  X,
 } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -30,6 +32,7 @@ const navLinks = [
 function App() {
   const [activeHref, setActiveHref] = useState("#top");
   const [activeCertImage, setActiveCertImage] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     if (typeof window === "undefined") {
       return "dark";
@@ -132,6 +135,33 @@ function App() {
     };
   }, [activeCertImage]);
 
+  useEffect(() => {
+    if (!isMobileMenuOpen) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    const handleMediaChange = (event: MediaQueryListEvent) => {
+      if (event.matches) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    mediaQuery.addEventListener("change", handleMediaChange);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      mediaQuery.removeEventListener("change", handleMediaChange);
+    };
+  }, [isMobileMenuOpen]);
+
   const navItems = navLinks.map((link) => ({
     ...link,
     isActive: link.href === activeHref,
@@ -148,6 +178,12 @@ function App() {
   const navInactiveClass = isDark
     ? "text-slate-400 hover:text-white"
     : "text-slate-500 hover:text-slate-900";
+  const navMobileActiveClass = isDark
+    ? "border-white/15 bg-white/10 text-white"
+    : "border-slate-300 bg-slate-100 text-slate-900";
+  const navMobileInactiveClass = isDark
+    ? "border-white/10 text-slate-300 hover:border-white/25 hover:bg-white/5 hover:text-white"
+    : "border-slate-200 text-slate-500 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900";
   const accentText = isDark ? "text-red-300" : "text-red-600";
   const accentLink = isDark
     ? "text-red-300 hover:text-red-200"
@@ -195,7 +231,17 @@ function App() {
         backgroundImage:
           "repeating-linear-gradient(to right, rgba(148,163,184,0.2) 0 1px, transparent 1px 96px), repeating-linear-gradient(to bottom, rgba(148,163,184,0.2) 0 1px, transparent 1px 96px), linear-gradient(180deg, rgba(255,255,255,0.998), rgba(250,252,255,1))",
       };
-  const sectionAnchorOffset = "scroll-mt-40 md:scroll-mt-32";
+  const headerActionClass = `theme-keep-white inline-flex items-center justify-center rounded-full border px-4 py-2 text-sm font-semibold transition ${
+    isDark
+      ? "border-white/10 bg-white/5 text-white hover:border-white/30 hover:bg-white/10"
+      : "border-slate-200 bg-slate-900 text-white hover:border-slate-300 hover:bg-slate-800"
+  }`;
+  const headerIconButtonClass = `inline-flex h-10 w-10 items-center justify-center cursor-pointer rounded-full border transition ${
+    isDark
+      ? "border-white/10 bg-white/5 text-white hover:border-white/30 hover:bg-white/10"
+      : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
+  }`;
+  const sectionAnchorOffset = "scroll-mt-20 md:scroll-mt-18";
   const stackIconMap: Record<string, { iconUrls: string[] }> = {
     JavaScript: {
       iconUrls: ["https://api.iconify.design/logos:javascript.svg"],
@@ -389,6 +435,11 @@ function App() {
     },
   ];
 
+  const handleNavItemClick = (href: string) => {
+    setActiveHref(href);
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <div
       className={`relative min-h-screen overflow-x-hidden font-body ${
@@ -417,71 +468,128 @@ function App() {
             : "border-slate-200/90 bg-white"
         }`}
       >
-        <div
-          className={`${container} flex flex-col gap-4 py-4 md:flex-row md:items-center md:justify-between`}
-        >
-          <div className="flex items-center gap-3">
-            <span className="theme-keep-white grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-red-500 to-red-900 font-display text-lg font-semibold text-white shadow-lg">
-              LD
-            </span>
-            <div>
-              <p className={`m-0 font-semibold tracking-widest ${textPrimary}`}>
-                {profile.name}
-              </p>
-              <p className={`mt-1 text-sm ${textMuted}`}>
-                {profile.role} | System Developer | App Developer
-              </p>
+        <div className={`${container} py-4`}>
+          <div className="flex items-center justify-between gap-4 md:grid md:grid-cols-[auto_1fr_auto] md:items-center md:gap-8">
+            <a
+              className="inline-flex min-w-0 items-center gap-3"
+              href="#top"
+              onClick={() => handleNavItemClick("#top")}
+              aria-label="Go back to the top of the page"
+            >
+              <span className="theme-keep-white grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-red-500 to-red-900 font-display text-lg font-semibold text-white shadow-lg">
+                LD
+              </span>
+              <div className="min-w-0">
+                <p className={`m-0 truncate font-semibold tracking-widest ${textPrimary}`}>
+                  {profile.name}
+                </p>
+                <p className={`mt-1 truncate text-sm ${textMuted}`}>
+                  {profile.role} | System Developer | App Developer
+                </p>
+              </div>
+            </a>
+
+            <nav
+              className="hidden md:flex md:flex-wrap md:justify-center md:gap-4 md:text-sm md:font-medium md:text-slate-400"
+              aria-label="Primary"
+            >
+              {navItems.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => handleNavItemClick(link.href)}
+                  className={`transition ${
+                    link.isActive ? navActiveClass : navInactiveClass
+                  }`}
+                  aria-current={link.isActive ? "page" : undefined}
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+
+            <div className="flex items-center gap-3">
+              <div className="hidden items-center gap-3 md:flex">
+                <a className={headerActionClass} href="#contact">
+                  Let&#39;s talk
+                </a>
+                <button
+                  type="button"
+                  onClick={toggleTheme}
+                  aria-label={
+                    isDark ? "Switch to light mode" : "Switch to dark mode"
+                  }
+                  className={headerIconButtonClass}
+                >
+                  {isDark ? (
+                    <Sun className="h-4 w-4" />
+                  ) : (
+                    <Moon className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+                aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+                aria-controls="mobile-navigation"
+                aria-expanded={isMobileMenuOpen}
+                className={`md:hidden ${headerIconButtonClass}`}
+              >
+                {isMobileMenuOpen ? (
+                  <X className="h-5 w-5" />
+                ) : (
+                  <Menu className="h-5 w-5" />
+                )}
+              </button>
             </div>
           </div>
 
-          <nav
-            className="flex flex-wrap gap-4 text-sm font-medium text-slate-400"
-            aria-label="Primary"
+          <div
+            id="mobile-navigation"
+            aria-hidden={!isMobileMenuOpen}
+            className={`overflow-hidden transition-all duration-300 md:hidden ${
+              isMobileMenuOpen
+                ? "visible mt-4 max-h-[28rem] opacity-100"
+                : "invisible max-h-0 opacity-0"
+            }`}
           >
-            {navItems.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={() => setActiveHref(link.href)}
-                className={`transition ${
-                  link.isActive ? navActiveClass : navInactiveClass
-                }`}
-                aria-current={link.isActive ? "page" : undefined}
-              >
-                {link.label}
-              </a>
-            ))}
-          </nav>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <a
-              className={`theme-keep-white inline-flex items-center justify-center rounded-full border px-4 py-2 text-sm font-semibold transition ${
-                isDark
-                  ? "border-white/10 bg-white/5 text-white hover:border-white/30 hover:bg-white/10"
-                  : "border-slate-200 bg-slate-900 text-white hover:border-slate-300 hover:bg-slate-800"
-              }`}
-              href="#contact"
-            >
-              Let&#39;s talk
-            </a>
-            <button
-              type="button"
-              onClick={toggleTheme}
-              aria-label={
-                isDark ? "Switch to light mode" : "Switch to dark mode"
-              }
-              className={`inline-flex h-10 w-10 items-center justify-center cursor-pointer rounded-full border transition ${
-                isDark
-                  ? "border-white/10 bg-white/5 text-white hover:border-white/30 hover:bg-white/10"
-                  : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
-              }`}
-            >
-              {isDark ? (
-                <Sun className="h-4 w-4" />
-              ) : (
-                <Moon className="h-4 w-4" />
-              )}
-            </button>
+            <div className={`rounded-3xl border p-4 ${panelSurfaceStrong}`}>
+              <nav className="flex flex-col gap-3" aria-label="Mobile primary">
+                {navItems.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => handleNavItemClick(link.href)}
+                    className={`rounded-2xl border px-4 py-3 text-sm font-medium transition ${
+                      link.isActive ? navMobileActiveClass : navMobileInactiveClass
+                    }`}
+                    aria-current={link.isActive ? "page" : undefined}
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </nav>
+              <div className="mt-4 flex items-center gap-3">
+                <a className={`min-w-0 flex-1 ${headerActionClass}`} href="#contact" onClick={() => handleNavItemClick("#contact")}>
+                  Let&#39;s talk
+                </a>
+                <button
+                  type="button"
+                  onClick={toggleTheme}
+                  aria-label={
+                    isDark ? "Switch to light mode" : "Switch to dark mode"
+                  }
+                  className={headerIconButtonClass}
+                >
+                  {isDark ? (
+                    <Sun className="h-4 w-4" />
+                  ) : (
+                    <Moon className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </header>
