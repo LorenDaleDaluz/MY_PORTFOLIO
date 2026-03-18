@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import {
   ArrowUpRight,
   BarChart3,
@@ -157,7 +157,7 @@ function App() {
     : "border-slate-200/80 bg-white/85 shadow-[0_20px_55px_rgba(148,163,184,0.16)]";
   const panelSurfaceStrong = isDark
     ? "border-white/10 bg-slate-900/80 shadow-lg"
-    : "border-slate-200/80 bg-white/90 shadow-[0_24px_60px_rgba(148,163,184,0.18)]";
+    : "border-slate-200/80 bg-white shadow-[0_24px_60px_rgba(148,163,184,0.18)]";
   const panelSurfaceInteractive = isDark
     ? "border-white/10 bg-slate-900/70 shadow-lg hover:-translate-y-1 hover:border-white/25"
     : "border-slate-200/80 bg-white/85 shadow-[0_20px_55px_rgba(148,163,184,0.16)] hover:-translate-y-1 hover:border-slate-300";
@@ -183,12 +183,60 @@ function App() {
     ? "border-red-400/30 bg-red-400/10 text-red-200"
     : "border-red-200 bg-red-50 text-red-700";
   const sectionBandFeature = isDark
-    ? "bg-[radial-gradient(circle_at_18%_18%,rgba(30,41,59,0.82),transparent_28%),radial-gradient(circle_at_82%_78%,rgba(37,99,235,0.12),transparent_30%),linear-gradient(135deg,rgba(15,23,42,0.88),rgba(2,6,23,0.97))]"
+    ? "bg-[radial-gradient(circle_at_18%_18%,rgba(30,41,59,0.36),transparent_28%),radial-gradient(circle_at_82%_78%,rgba(37,99,235,0.1),transparent_30%),linear-gradient(135deg,rgba(15,23,42,0.46),rgba(2,6,23,0.58))]"
     : "bg-[radial-gradient(circle_at_18%_18%,rgba(191,219,254,0.55),transparent_24%),radial-gradient(circle_at_82%_78%,rgba(254,215,170,0.4),transparent_32%),linear-gradient(135deg,rgba(255,255,255,0.94),rgba(241,245,249,0.98))]";
   const sectionBandPlain = isDark
     ? "bg-[linear-gradient(180deg,rgba(3,7,18,0.985),rgba(15,23,42,0.99))]"
-    : "bg-[linear-gradient(180deg,rgba(255,255,255,0.985),rgba(248,250,252,0.99))]";
+    : "";
   const sectionDivider = isDark ? "bg-white/8" : "bg-slate-200/80";
+  const lightPlainSectionStyle: CSSProperties | undefined = isDark
+    ? undefined
+    : {
+        backgroundImage:
+          "repeating-linear-gradient(to right, rgba(148,163,184,0.2) 0 1px, transparent 1px 96px), repeating-linear-gradient(to bottom, rgba(148,163,184,0.2) 0 1px, transparent 1px 96px), linear-gradient(180deg, rgba(255,255,255,0.998), rgba(250,252,255,1))",
+      };
+  const sectionAnchorOffset = "scroll-mt-40 md:scroll-mt-32";
+  const stackIconMap: Record<string, { iconUrls: string[] }> = {
+    JavaScript: {
+      iconUrls: ["https://api.iconify.design/logos:javascript.svg"],
+    },
+    "React + Vite": {
+      iconUrls: [
+        "https://api.iconify.design/logos:react.svg",
+        "https://api.iconify.design/logos:vitejs.svg",
+      ],
+    },
+    "Tailwind CSS": {
+      iconUrls: ["https://api.iconify.design/logos:tailwindcss-icon.svg"],
+    },
+    MySQL: {
+      iconUrls: ["https://api.iconify.design/logos:mysql.svg"],
+    },
+    Leaflet: {
+      iconUrls: ["https://api.iconify.design/logos:leaflet.svg"],
+    },
+    "Google Maps API": {
+      iconUrls: ["https://api.iconify.design/logos:google-maps.svg"],
+    },
+    "Face API": {
+      iconUrls: ["https://api.iconify.design/mdi/face-recognition.svg?color=%2360a5fa"],
+    },
+    reCAPTCHA: {
+      iconUrls: ["https://api.iconify.design/logos:recaptcha.svg"],
+    },
+    Ionic: {
+      iconUrls: ["https://api.iconify.design/logos:ionic-icon.svg"],
+    },
+    Angular: {
+      iconUrls: ["https://api.iconify.design/logos:angular-icon.svg"],
+    },
+    SQLite: {
+      iconUrls: ["https://api.iconify.design/logos:sqlite.svg"],
+    },
+    NgxCharts: {
+      iconUrls: ["https://api.iconify.design/logos:chartjs.svg"],
+    },
+  };
 
   const services = [
     {
@@ -362,85 +410,85 @@ function App() {
         ) : null}
       </div>
 
-      <div className="relative z-10">
-        <header
-          className={`sticky top-0 z-[100] border-b backdrop-blur ${
-            isDark
-              ? "border-white/10 bg-slate-950/70"
-              : "border-slate-200/70 bg-white/80"
-          }`}
+      <header
+        className={`app-header border-b shadow-[0_14px_34px_rgba(15,23,42,0.12)] ${
+          isDark
+            ? "border-white/15 bg-slate-950"
+            : "border-slate-200/90 bg-white"
+        }`}
+      >
+        <div
+          className={`${container} flex flex-col gap-4 py-4 md:flex-row md:items-center md:justify-between`}
         >
-          <div
-            className={`${container} flex flex-col gap-4 py-4 md:flex-row md:items-center md:justify-between`}
-          >
-            <div className="flex items-center gap-3">
-              <span className="theme-keep-white grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-red-500 to-red-900 font-display text-lg font-semibold text-white shadow-lg">
-                LD
-              </span>
-              <div>
-                <p className={`m-0 font-semibold tracking-widest ${textPrimary}`}>
-                  {profile.name}
-                </p>
-                <p className={`mt-1 text-sm ${textMuted}`}>
-                  {profile.role} | System Developer | App Developer
-                </p>
-              </div>
-            </div>
-
-            <nav
-              className="flex flex-wrap gap-4 text-sm font-medium text-slate-400"
-              aria-label="Primary"
-            >
-              {navItems.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setActiveHref(link.href)}
-                  className={`transition ${
-                    link.isActive ? navActiveClass : navInactiveClass
-                  }`}
-                  aria-current={link.isActive ? "page" : undefined}
-                >
-                  {link.label}
-                </a>
-              ))}
-            </nav>
-
-            <div className="flex flex-wrap items-center gap-3">
-              <a
-                className={`theme-keep-white inline-flex items-center justify-center rounded-full border px-4 py-2 text-sm font-semibold transition ${
-                  isDark
-                    ? "border-white/10 bg-white/5 text-white hover:border-white/30 hover:bg-white/10"
-                    : "border-slate-200 bg-slate-900 text-white hover:border-slate-300 hover:bg-slate-800"
-                }`}
-                href="#contact"
-              >
-                Let&#39;s talk
-              </a>
-              <button
-                type="button"
-                onClick={toggleTheme}
-                aria-label={
-                  isDark ? "Switch to light mode" : "Switch to dark mode"
-                }
-                className={`inline-flex h-10 w-10 items-center justify-center rounded-full border transition ${
-                  isDark
-                    ? "border-white/10 bg-white/5 text-white hover:border-white/30 hover:bg-white/10"
-                    : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
-                }`}
-              >
-                {isDark ? (
-                  <Sun className="h-4 w-4" />
-                ) : (
-                  <Moon className="h-4 w-4" />
-                )}
-              </button>
+          <div className="flex items-center gap-3">
+            <span className="theme-keep-white grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-red-500 to-red-900 font-display text-lg font-semibold text-white shadow-lg">
+              LD
+            </span>
+            <div>
+              <p className={`m-0 font-semibold tracking-widest ${textPrimary}`}>
+                {profile.name}
+              </p>
+              <p className={`mt-1 text-sm ${textMuted}`}>
+                {profile.role} | System Developer | App Developer
+              </p>
             </div>
           </div>
-        </header>
 
-        <main className="relative z-0">
-        <section className="pb-20 pt-16" id="top">
+          <nav
+            className="flex flex-wrap gap-4 text-sm font-medium text-slate-400"
+            aria-label="Primary"
+          >
+            {navItems.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={() => setActiveHref(link.href)}
+                className={`transition ${
+                  link.isActive ? navActiveClass : navInactiveClass
+                }`}
+                aria-current={link.isActive ? "page" : undefined}
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <a
+              className={`theme-keep-white inline-flex items-center justify-center rounded-full border px-4 py-2 text-sm font-semibold transition ${
+                isDark
+                  ? "border-white/10 bg-white/5 text-white hover:border-white/30 hover:bg-white/10"
+                  : "border-slate-200 bg-slate-900 text-white hover:border-slate-300 hover:bg-slate-800"
+              }`}
+              href="#contact"
+            >
+              Let&#39;s talk
+            </a>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={
+                isDark ? "Switch to light mode" : "Switch to dark mode"
+              }
+              className={`inline-flex h-10 w-10 items-center justify-center cursor-pointer rounded-full border transition ${
+                isDark
+                  ? "border-white/10 bg-white/5 text-white hover:border-white/30 hover:bg-white/10"
+                  : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
+              }`}
+            >
+              {isDark ? (
+                <Sun className="h-4 w-4" />
+              ) : (
+                <Moon className="h-4 w-4" />
+              )}
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div className="relative z-10">
+        <main className="relative z-0 pt-32">
+        <section className={`pb-20 pt-12 ${sectionAnchorOffset}`} id="top">
           <div
             className={`${container} grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]`}
           >
@@ -560,16 +608,20 @@ function App() {
           </div>
         </section>
 
-        <section className="relative isolate z-0 overflow-hidden py-24" id="about">
+        <section
+          className={`relative isolate z-0 overflow-hidden py-24 ${sectionAnchorOffset}`}
+          id="about"
+        >
           <div
-            className={`pointer-events-none absolute inset-0 -z-10 ${sectionBandPlain}`}
+            className={`pointer-events-none absolute inset-0 z-0 ${sectionBandPlain}`}
+            style={lightPlainSectionStyle}
             aria-hidden="true"
           />
           <div
-            className={`pointer-events-none absolute inset-x-0 top-0 h-px -z-10 ${sectionDivider}`}
+            className={`pointer-events-none absolute inset-x-0 top-0 z-[2] h-px ${sectionDivider}`}
             aria-hidden="true"
           />
-          <div className={`${container} relative grid gap-8 lg:grid-cols-[1.2fr_0.8fr]`}>
+          <div className={`${container} relative z-10 grid gap-8 lg:grid-cols-[1.2fr_0.8fr]`}>
             <div
               className={`rounded-3xl border p-8 ${panelSurface}`}
               data-aos="fade-up"
@@ -661,7 +713,7 @@ function App() {
           </div>
         </section>
 
-        <section className="py-24" id="services">
+        <section className={`py-24 ${sectionAnchorOffset}`} id="services">
           <div className={container}>
             <div className="mb-8 space-y-3" data-aos="fade-up">
               <span
@@ -702,18 +754,19 @@ function App() {
         </section>
 
         <section
-          className="relative isolate z-0 overflow-hidden py-24"
+          className={`relative isolate z-0 overflow-hidden py-24 ${sectionAnchorOffset}`}
           id="certifications"
         >
           <div
-            className={`pointer-events-none absolute inset-0 -z-10 ${sectionBandPlain}`}
+            className={`pointer-events-none absolute inset-0 z-0 ${sectionBandPlain}`}
+            style={lightPlainSectionStyle}
             aria-hidden="true"
           />
           <div
-            className={`pointer-events-none absolute inset-x-0 top-0 h-px -z-10 ${sectionDivider}`}
+            className={`pointer-events-none absolute inset-x-0 top-0 z-[2] h-px ${sectionDivider}`}
             aria-hidden="true"
           />
-          <div className={`${container} relative`}>
+          <div className={`${container} relative z-10`}>
             <div className="mb-8 space-y-3" data-aos="fade-up">
               <span
                 className={`text-xs font-semibold uppercase tracking-[0.28em] ${accentText}`}
@@ -754,18 +807,18 @@ function App() {
         </section>
 
         <section
-          className="relative isolate z-0 overflow-hidden pb-24 pt-24"
+          className={`relative isolate z-0 overflow-hidden pb-24 pt-24 ${sectionAnchorOffset}`}
           id="projects"
         >
           <div
-            className={`pointer-events-none absolute inset-0 -z-10 ${sectionBandFeature}`}
+            className={`pointer-events-none absolute inset-0 z-0 ${sectionBandFeature}`}
             aria-hidden="true"
           />
           <div
-            className={`pointer-events-none absolute inset-x-0 top-0 h-px -z-10 ${sectionDivider}`}
+            className={`pointer-events-none absolute inset-x-0 top-0 z-[2] h-px ${sectionDivider}`}
             aria-hidden="true"
           />
-          <div className={`${container} relative`}>
+          <div className={`${container} relative z-10`}>
             <div className="mb-12 space-y-3 text-center" data-aos="fade-up">
               <span
                 className={`text-xs font-semibold uppercase tracking-[0.28em] ${accentText}`}
@@ -803,14 +856,49 @@ function App() {
                     </ul>
                   ) : null}
                   <div className="flex flex-wrap gap-2">
-                    {project.stack.map((tag) => (
-                      <span
-                        className={`rounded-full border px-3 py-1 text-xs font-semibold ${chipSurface}`}
-                        key={tag}
-                      >
-                        {tag}
-                      </span>
-                    ))}
+                    {project.stack.map((tag) => {
+                      const stackIcon = stackIconMap[tag];
+                      const iconUrls = stackIcon?.iconUrls ?? [];
+
+                      return (
+                        <span
+                          className={`inline-flex h-10 min-w-10 items-center justify-center gap-1.5 rounded-full border px-2.5 ${chipSurface}`}
+                          key={tag}
+                          title={tag}
+                          aria-label={tag}
+                        >
+                          {iconUrls.length > 0 ? (
+                            iconUrls.map((iconUrl, iconIndex) => (
+                              <img
+                                key={`${tag}-${iconIndex}`}
+                                className="h-5 w-5 rounded-sm object-contain"
+                                src={iconUrl}
+                                alt=""
+                                aria-hidden="true"
+                                loading="lazy"
+                                decoding="async"
+                                onError={(event) => {
+                                  const currentTarget = event.currentTarget;
+
+                                  if (
+                                    currentTarget.dataset.fallbackApplied ===
+                                    "true"
+                                  ) {
+                                    currentTarget.style.display = "none";
+                                    return;
+                                  }
+
+                                  currentTarget.dataset.fallbackApplied = "true";
+                                  currentTarget.src =
+                                    "https://api.iconify.design/mdi/code-tags.svg?color=%2364758b";
+                                }}
+                              />
+                            ))
+                          ) : null}
+                          <span className="sr-only">{tag}</span>
+                        </span>
+                      );
+                    })}
                   </div>
                   {project.link ? (
                     <a
@@ -842,16 +930,20 @@ function App() {
           </div>
         </section>
 
-        <section className="relative isolate z-0 overflow-hidden pb-24 pt-24" id="contact">
+        <section
+          className={`relative isolate z-0 overflow-hidden pb-24 pt-24 ${sectionAnchorOffset}`}
+          id="contact"
+        >
           <div
-            className={`pointer-events-none absolute inset-0 -z-10 ${sectionBandPlain}`}
+            className={`pointer-events-none absolute inset-0 z-0 ${sectionBandPlain}`}
+            style={lightPlainSectionStyle}
             aria-hidden="true"
           />
           <div
-            className={`pointer-events-none absolute inset-x-0 top-0 h-px -z-10 ${sectionDivider}`}
+            className={`pointer-events-none absolute inset-x-0 top-0 z-[2] h-px ${sectionDivider}`}
             aria-hidden="true"
           />
-          <div className={`${container} relative`}>
+          <div className={`${container} relative z-10`}>
             <div
               className={`grid gap-6 rounded-[28px] border p-8 md:grid-cols-[1.1fr_0.9fr] ${panelSurfaceStrong}`}
               data-aos="fade-up"
@@ -934,7 +1026,7 @@ function App() {
 
         {activeCertImage ? (
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+            className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/70 p-4"
             role="dialog"
             aria-modal="true"
             aria-label="Certification preview"

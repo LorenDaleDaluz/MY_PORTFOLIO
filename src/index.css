@@ -20,6 +20,16 @@
     @apply block max-w-full;
   }
 }
+
+.app-header {
+  left: 0;
+  position: fixed !important;
+  right: 0;
+  top: 0;
+  transform: translateZ(0);
+  z-index: 2147483000 !important;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }
