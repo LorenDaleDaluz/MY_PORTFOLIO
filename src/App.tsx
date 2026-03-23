@@ -368,6 +368,16 @@ function App() {
       linkLabel: "Download app",
       linkDownload: true,
     },
+    {
+      title: "Baraha",
+      subtitle: "Browser card game",
+      description:
+        "A browser-based card game deployed on GitHub Pages for quick, play-anywhere access.",
+      highlights: ["Playable online via GitHub Pages"],
+      stack: ["JavaScript"],
+      link: "https://lorendaledaluz.github.io/baraha/",
+      linkLabel: "Play game",
+    },
   ];
 
   const education = [
