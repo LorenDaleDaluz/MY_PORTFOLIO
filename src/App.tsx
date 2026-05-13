@@ -60,7 +60,7 @@ function App() {
 
   const profile = {
     name: "Dale",
-    role: "Web Developer",
+    role: "Aspiring Developer",
     location: "Cabanatuan City, Nueva Ecija",
     phone: "+63 9193994203",
     email: "lorendaledaluz@gmail.com",
@@ -384,7 +384,7 @@ function App() {
     {
       school: "NEUST Sumacab Campus",
       program: "Bachelor of Science in Information Technology",
-      period: "2022 - 2026",
+      period: "2022 - Ongoing",
       details: [
         "Specialized in Web Systems Technology",
         'Capstone: "IDentify" with automated email notifications.',
@@ -492,7 +492,7 @@ function App() {
                   {profile.name}
                 </p>
                 <p className={`mt-1 truncate text-sm ${textMuted}`}>
-                  {profile.role} | System Developer | App Developer
+                  {profile.role} | IT Specialist Enthusiast
                 </p>
               </div>
             </a>
