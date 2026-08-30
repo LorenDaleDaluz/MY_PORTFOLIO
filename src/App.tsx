@@ -59,7 +59,7 @@ function App() {
   }, [theme]);
 
   const profile = {
-    name: "Dale",
+    name: "DND",
     role: "Aspiring Developer",
     location: "Cabanatuan City, Nueva Ecija",
     phone: "+63 9193994203",
@@ -384,11 +384,11 @@ function App() {
     {
       school: "NEUST Sumacab Campus",
       program: "Bachelor of Science in Information Technology",
-      period: "2022 - Ongoing",
+      period: "2022 - 2026",
       details: [
         "Specialized in Web Systems Technology",
         'Capstone: "IDentify" with automated email notifications.',
-        "GWA (3rd Year): 1.27",
+        "Graduated with Academic Distinction",
       ],
     },
     {
@@ -492,7 +492,7 @@ function App() {
                   {profile.name}
                 </p>
                 <p className={`mt-1 truncate text-sm ${textMuted}`}>
-                  {profile.role} | IT Specialist Enthusiast
+                  {profile.role} 
                 </p>
               </div>
             </a>
@@ -1211,7 +1211,7 @@ function App() {
           <div
             className={`${container} flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center`}
           >
-            <p>(c) 2026 Loren Dale Natabio Daluz. All rights reserved.</p>
+            <p>Loren Dale Natabio Daluz</p>
             <a
               className={`text-sm font-semibold transition ${accentLink}`}
               href="#top"
