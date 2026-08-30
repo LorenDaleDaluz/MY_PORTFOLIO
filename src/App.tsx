@@ -369,6 +369,16 @@ function App() {
       linkDownload: true,
     },
     {
+      title: "Spendz",
+      subtitle: "Personal expense tracker",
+      description:
+        "A responsive web app for recording expenses, organizing spending, and keeping a clear view of your personal budget.",
+      highlights: ["Track everyday expenses in one place"],
+      stack: ["React + Vite", "Tailwind CSS"],
+      link: "https://spendz-tracker.vercel.app",
+      linkLabel: "Visit project",
+    },
+    {
       title: "Baraha",
       subtitle: "Browser card game",
       description:
