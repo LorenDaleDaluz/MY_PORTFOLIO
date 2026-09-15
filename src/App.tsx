@@ -2,10 +2,8 @@ import { useEffect, useState, type CSSProperties } from "react";
 import {
   ArrowUpRight,
   Code2,
-  Database,
   Facebook,
   Github,
-  Layout,
   Mail,
   MapPin,
   Moon,
@@ -283,12 +281,6 @@ function App() {
 
   const services = [
     {
-      title: "Web Application",
-      description:
-        "End-to-end web apps with clean UI, role-based access, and scalable architecture.",
-      icon: Layout,
-    },
-    {
       title: "Web Development",
       description:
         "Responsive sites and landing pages optimized for performance.",
@@ -299,12 +291,6 @@ function App() {
       description:
         "Mobile-first experiences and hybrid prototypes with consistent design systems.",
       icon: Smartphone,
-    },
-    {
-      title: "Database Management",
-      description:
-        "Schema design, data integrity, and query performance for reliable systems.",
-      icon: Database,
     },
     {
       title: "Web Design",
