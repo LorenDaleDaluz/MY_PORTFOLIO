@@ -292,7 +292,7 @@ function App() {
     {
       title: "Web Development",
       description:
-        "Responsive sites and landing pages optimized for performance and SEO.",
+        "Responsive sites and landing pages optimized for performance.",
       icon: Code2,
     },
     {
@@ -306,12 +306,6 @@ function App() {
       description:
         "Schema design, data integrity, and query performance for reliable systems.",
       icon: Database,
-    },
-    {
-      title: "Data Analysis",
-      description:
-        "Dashboards and reporting that turn raw data into actionable insights.",
-      icon: BarChart3,
     },
     {
       title: "Web Design",
