@@ -1,7 +1,6 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import {
   ArrowUpRight,
-  BarChart3,
   Code2,
   Database,
   Facebook,
