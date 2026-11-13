@@ -351,12 +351,27 @@ html.is-modal {
 /* Hero                                                                */
 /* ------------------------------------------------------------------ */
 
+/*
+ * Hero layers that span the monitor's whole surface (`--inner-w`), centred on
+ * the page (`--screen-w`). On desktop both are the viewport width.
+ */
+.hero-span {
+  left: calc((var(--screen-w, 100vw) - var(--inner-w, 100vw)) / 2);
+  width: var(--inner-w, 100vw);
+}
+
+/* Glows are sized and placed relative to the page, so the page itself looks
+   the same at any surface width; the last layer only lights a wide surface. */
 .hero-backdrop {
+  --w: var(--screen-w, 100vw);
   background:
-    radial-gradient(55% 60% at 50% 56%, rgba(190, 20, 18, 0.62), transparent 72%),
-    radial-gradient(38% 60% at 6% 62%, rgba(51, 88, 255, 0.42), transparent 72%),
-    radial-gradient(36% 55% at 95% 42%, rgba(255, 181, 154, 0.32), transparent 72%),
-    radial-gradient(30% 40% at 85% 85%, rgba(255, 90, 140, 0.22), transparent 70%),
+    radial-gradient(calc(var(--w) * 0.55) 60% at 50% 56%, rgba(190, 20, 18, 0.62), transparent 72%),
+    radial-gradient(calc(var(--w) * 0.38) 60% at calc(50% - var(--w) * 0.44) 62%, rgba(51, 88, 255, 0.42), transparent 72%),
+    radial-gradient(calc(var(--w) * 0.36) 55% at calc(50% + var(--w) * 0.45) 42%, rgba(255, 181, 154, 0.32), transparent 72%),
+    radial-gradient(calc(var(--w) * 0.3) 40% at calc(50% + var(--w) * 0.35) 85%, rgba(255, 90, 140, 0.22), transparent 70%),
+    radial-gradient(18% 70% at 14% 58%, rgba(51, 88, 255, calc(0.32 * var(--wide-on, 0))), transparent 75%),
+    radial-gradient(18% 65% at 86% 46%, rgba(255, 181, 154, calc(0.26 * var(--wide-on, 0))), transparent 75%),
+    radial-gradient(60% 85% at 50% 56%, rgba(150, 16, 16, calc(0.32 * var(--wide-on, 0))), transparent 78%),
     #050505;
 }
 

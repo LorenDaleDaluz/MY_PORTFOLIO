@@ -15,61 +15,40 @@ type Key = { t: number; cam: Cam };
 const MONITOR = { cx: 860, bottom: 640, area: 600 * 375 };
 
 /**
- * The monitor's screen takes the viewport's aspect ratio (within limits),
- * so on a phone it becomes a pivoted, portrait monitor and the page inside
- * it never needs letterboxing.
+ * The monitor is always a landscape desktop screen (16:10 up to 16:9). On
+ * viewports narrower than that, the page is centred on a wider screen
+ * surface (see Experience.measureView).
  */
 export function screenRectFor(aspect: number): Rect {
-  const a = clamp(aspect, 0.56, 1.78);
+  const a = clamp(aspect, 1.6, 1.78);
   const w = Math.sqrt(MONITOR.area * a);
   const h = Math.sqrt(MONITOR.area / a);
   return { x: MONITOR.cx - w / 2, y: MONITOR.bottom - h, w, h };
 }
 
+/**
+ * Portrait framings are driven by width (a phone is narrow): the subject
+ * is `w` wide around (cx, cy), and tall enough that width always decides.
+ */
+const tall = (cx: number, cy: number, w: number): Rect => {
+  const h = w * 2.1;
+  return { x: cx - w / 2, y: cy - h / 2, w, h };
+};
+
 /** Subject rectangles for each shot: [portrait framing, landscape framing]. */
 const SUBJECTS: Record<string, [Rect, Rect]> = {
-  wide: [
-    { x: 330, y: -40, w: 900, h: 1080 },
-    { x: 90, y: 20, w: 1420, h: 930 },
-  ],
-  wideDrift: [
-    { x: 350, y: -20, w: 860, h: 1040 },
-    { x: 150, y: 50, w: 1330, h: 870 },
-  ],
+  wide: [tall(790, 650, 820), { x: 90, y: 20, w: 1420, h: 930 }],
+  wideDrift: [tall(795, 630, 770), { x: 150, y: 50, w: 1330, h: 870 }],
   // Over-the-shoulder framings keep the camera centre between the viewer's
   // head and the screen, so his silhouette stays in frame on the left.
-  mid: [
-    { x: 420, y: 0, w: 760, h: 920 },
-    { x: 200, y: 110, w: 1140, h: 740 },
-  ],
-  ots: [
-    { x: 520, y: 60, w: 620, h: 760 },
-    { x: 290, y: 175, w: 940, h: 610 },
-  ],
-  workA: [
-    { x: 490, y: -60, w: 640, h: 960 },
-    { x: 300, y: 165, w: 920, h: 600 },
-  ],
-  workB: [
-    { x: 505, y: -40, w: 610, h: 920 },
-    { x: 335, y: 180, w: 870, h: 570 },
-  ],
-  contactA: [
-    { x: 300, y: -10, w: 860, h: 1000 },
-    { x: 130, y: 120, w: 1140, h: 760 },
-  ],
-  contactB: [
-    { x: 320, y: 10, w: 830, h: 970 },
-    { x: 160, y: 135, w: 1090, h: 730 },
-  ],
-  outroA: [
-    { x: 420, y: 0, w: 760, h: 920 },
-    { x: 360, y: 140, w: 1000, h: 680 },
-  ],
-  outroB: [
-    { x: 250, y: -90, w: 1040, h: 1220 },
-    { x: 20, y: -30, w: 1560, h: 1040 },
-  ],
+  mid: [tall(790, 570, 680), { x: 200, y: 110, w: 1140, h: 740 }],
+  ots: [tall(800, 520, 560), { x: 290, y: 175, w: 940, h: 610 }],
+  workA: [tall(805, 520, 540), { x: 300, y: 165, w: 920, h: 600 }],
+  workB: [tall(810, 510, 510), { x: 335, y: 180, w: 870, h: 570 }],
+  contactA: [tall(725, 600, 760), { x: 130, y: 120, w: 1140, h: 760 }],
+  contactB: [tall(730, 590, 720), { x: 160, y: 135, w: 1090, h: 730 }],
+  outroA: [tall(770, 540, 640), { x: 360, y: 140, w: 1000, h: 680 }],
+  outroB: [tall(770, 640, 900), { x: 20, y: -30, w: 1560, h: 1040 }],
 };
 
 const mixRect = (a: Rect, b: Rect, t: number): Rect => ({

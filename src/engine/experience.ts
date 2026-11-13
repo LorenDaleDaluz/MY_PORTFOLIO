@@ -86,6 +86,8 @@ export class Experience {
   private dpr = 1;
   private layoutVw = 0;
   private layoutVh = 0;
+  /** Width of the monitor's surface in page pixels (≥ viewport width). */
+  private innerW = 1;
   private screenRect: Rect = { x: 0, y: 0, w: 1, h: 1 };
   private shots: Shots | null = null;
   private tl: Timeline | null = null;
@@ -249,10 +251,27 @@ export class Experience {
       this.layoutVh = vh;
       document.documentElement.style.setProperty("--screen-h", `${vh}px`);
     }
-    els.inner.style.width = `${vw}px`;
-    els.inner.style.height = `${vh}px`;
     this.screenRect = screenRectFor(vw / vh);
     this.shots = buildShots(vw, vh, this.screenRect);
+
+    // The monitor is always landscape. On narrower (e.g. phone) viewports the
+    // monitor's surface is wider than the page, so the page sits centred on it
+    // and the hero light / lava background run edge to edge. Zooming in to
+    // fill the viewport lands exactly on the page at 1:1.
+    // Whole-pixel side margins keep the page on exact pixels (crisp text);
+    // rounding down keeps the surface within the monitor, so the fill shot
+    // still lands at exactly 1:1.
+    const aspect = this.screenRect.w / this.screenRect.h;
+    const innerW = vw + 2 * Math.max(0, Math.floor((vh * aspect - vw) / 2));
+    this.innerW = innerW;
+    const root = document.documentElement.style;
+    root.setProperty("--screen-w", `${vw}px`);
+    root.setProperty("--inner-w", `${innerW}px`);
+    root.setProperty("--wide-on", innerW > vw + 1 ? "1" : "0");
+    els.inner.style.width = `${innerW}px`;
+    els.inner.style.height = `${vh}px`;
+    els.content.style.left = `${(innerW - vw) / 2}px`;
+    els.content.style.width = `${vw}px`;
     this.readingStyles = false;
     this.dirty = true;
   }
@@ -386,13 +405,13 @@ export class Experience {
   private applyScreen(cam: Cam, offset: number, reading: boolean) {
     const els = this.els;
     if (!els) return true;
-    const { vw, vh } = this;
+    const { vw, vh, innerW } = this;
     const S = this.screenRect;
     const x0 = vw / 2 + (S.x - cam.x) * cam.s;
     const y0 = vh / 2 + (S.y - cam.y) * cam.s;
     const w = S.w * cam.s;
     const h = S.h * cam.s;
-    const k = Math.min(w / vw, h / vh);
+    const k = Math.min(w / innerW, h / vh);
     const covers =
       reading ||
       (Math.abs(k - 1) < 1e-3 &&
@@ -419,7 +438,9 @@ export class Experience {
         screen.height = `${vh}px`;
         screen.transform = "translate3d(0px, 0px, 0px)";
         screen.borderRadius = "0px";
-        inner.transform = "none";
+        // Show the centre of the (possibly wider) monitor surface: the page.
+        inner.transform =
+          innerW > vw ? `translate(${-(innerW - vw) / 2}px, 0px)` : "none";
         inner.pointerEvents = "auto";
         this.readingStyles = true;
       }
@@ -429,7 +450,7 @@ export class Experience {
       screen.height = `${h}px`;
       screen.transform = `translate3d(${x0}px, ${y0}px, 0px)`;
       screen.borderRadius = `${Math.max(0, 6 * cam.s).toFixed(2)}px`;
-      inner.transform = `translate(${(w - vw * k) / 2}px, ${(h - vh * k) / 2}px) scale(${k})`;
+      inner.transform = `translate(${(w - innerW * k) / 2}px, ${(h - vh * k) / 2}px) scale(${k})`;
       inner.pointerEvents = "none";
     }
     const y = Math.round(offset * this.dpr) / this.dpr;

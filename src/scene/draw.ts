@@ -115,7 +115,7 @@ const MOON = { x: -760, y: -380 };
 const HORIZON = 560;
 
 /** Where the viewer sits (man layer), for portrait and landscape framing. */
-const MAN_P: Vec = [712, 618];
+const MAN_P: Vec = [700, 606];
 const MAN_L: Vec = [652, 606];
 const MOUSE: Vec = [246, 114];
 

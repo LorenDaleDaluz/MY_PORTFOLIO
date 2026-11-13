@@ -9,10 +9,11 @@ export default function Hero() {
       id="top"
       data-section="top"
       data-glow="255,58,34"
-      className="relative overflow-hidden bg-void"
+      className="relative"
       style={{ height: "var(--screen-h)" }}
     >
-      <div className="hero-backdrop absolute inset-0" aria-hidden="true" />
+      {/* Spans the whole monitor surface, which can be wider than the page on phones. */}
+      <div className="hero-backdrop hero-span absolute inset-y-0" aria-hidden="true" />
       <div className="absolute inset-x-0 bottom-0 top-[11%] flex justify-center">
         <img
           src="/myImage.png"
@@ -22,7 +23,7 @@ export default function Hero() {
           fetchPriority="high"
         />
       </div>
-      <div className="hero-fade absolute inset-0" aria-hidden="true" />
+      <div className="hero-fade hero-span absolute inset-y-0" aria-hidden="true" />
       <div
         className="hero-ring absolute left-1/2 top-[55%] aspect-square -translate-x-1/2 -translate-y-1/2 rounded-full"
         aria-hidden="true"
